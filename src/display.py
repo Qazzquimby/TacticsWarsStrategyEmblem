@@ -16,14 +16,15 @@ class Display(object):
                                                 self.display_height))
 
     def flip_display(self):
-        """Prints the current display to the screen"""
         self.display.blit(
-            pygame.transform.scale(self.surface,
-                                   (self.display_width, self.display_height)),
+            pygame.transform.scale(
+                self.surface, (self.display_width, self.display_height)),
             (0, 0))
         pygame.display.flip()
 
-    @staticmethod
-    def update_rect(rect_list):
+    def execute_tick(self):
+        self.flip_display()
+
+    def update_rects(self, rect_list):
         """Updates only the area signified by the rect_list"""
         pygame.display.update(rect_list)

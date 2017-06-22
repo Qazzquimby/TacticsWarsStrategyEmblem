@@ -2,34 +2,34 @@
 
 # noinspection
 
-## \file  menu.py
+## \file  content.py
 #  \brief General Menu Class
 #  \author Scott Barlow
 #  \date 2009
 #  \version 1.0.3
 #
-#  This is a menu class written for pygame/Python.  The menu is designed to work
+#  This is a content class written for pygame/Python.  The content is designed to work
 #  with a program using a finite state machine (but it could also be easily
-#  modified to have the 'buttons' return functions).  The menu 'buttons' contain
+#  modified to have the 'buttons' return functions).  The content 'buttons' contain
 #  a 'state' (a state could really be anything you want) and this 'state' is
 #  what is returned when the user selects/presses the button.  The program
-#  controlling the menu can then act on this returned state as required.  This
+#  controlling the content can then act on this returned state as required.  This
 #  helps to write non-blocking code.
 #
-#  The menu can have text buttons, image buttons (that get highlighted on all
+#  The content can have text buttons, image buttons (that get highlighted on all
 #  sides to detect which is selected), or any combination of the two.
 #
-#  The menu is flexible and can be dynamically changed.  The 'buttons' will
-#  auto-magically update themselves the next time they are drawn to the screen
-#  (via the update method, which calls the draw method).  The draw method should
+#  The content is flexible and can be dynamically changed.  The 'buttons' will
+#  auto-magically execute_tick themselves the next time they are drawn to the screen
+#  (via the execute_tick method, which calls the draw method).  The draw method should
 #  not be called itself.  'Buttons' can be added or removed at any time.
 #
-#  The menu can be positioned by the top left corner (a rectangle containing all
-#  buttons is what gets moved).  It can be changed to center the entire menu
+#  The content can be positioned by the top left corner (a rectangle containing all
+#  buttons is what gets moved).  It can be changed to center the entire content
 #  (i.e. center that containing rectangle) on that same position coordinate.  Or
-#  the user can center the entire menu on the self.draw_surface.  Note that if
-#  the pygame screen is given to the menu, then the entire window will be
-#  available to be drawn to.  But if the user gives the menu another pygame
+#  the user can center the entire content on the self.draw_surface.  Note that if
+#  the pygame screen is given to the content, then the entire window will be
+#  available to be drawn to.  But if the user gives the content another pygame
 #  surface, then that surface itself will need to be blitted to the pygame
 #  screen at some point.  Furthermore, the user can align the buttons to align
 #  on the left, tobe centerd, or to align themselves on the right.  Also, they
@@ -37,12 +37,12 @@
 #
 #  The user can dynamically change the colors of the font/highlights, the
 #  padding between buttons (left/right and top/bottom), the thickness of the
-#  highlight around image buttons, and the orientation of the menu (if the
+#  highlight around image buttons, and the orientation of the content (if the
 #  'buttons' will be stacked top to bottom ('vertical') or left to right
 #  ('horizontal').
 #
-#  The best way to figure out the menu is to tinker around with it.  Run the
-#  example programs, change attributes, and play with the menu.
+#  The best way to figure out the content is to tinker around with it.  Run the
+#  example programs, change attributes, and play with the content.
 #
 #
 #       Copyright 2009 Scott Barlow
@@ -66,7 +66,7 @@
 #  Changelog
 #     V1.0.0 - Initial Release
 #     V1.0.1 - Added get_current_image method
-#     V1.0.2 - Fixed a bug in the set_font method (to update the rect of the
+#     V1.0.2 - Fixed a bug in the set_font method (to execute_tick the rect of the
 #              text buttons when the font is changed
 #     V1.0.3 - Added self.refresh_whole_surface_on_load functionality
 #
@@ -106,16 +106,16 @@ EVENT_CHANGE_STATE = pygame.USEREVENT + 1
 # ---[ cMenu Class
 # ]-------------------------------------------------------------
 # -------------------------------------------------------------------------------
-## This class is used to display and control a menu
+## This class is used to display and control a content
 #
 class cOptionsMenu:
     ## ---[ __init__
     # ]-----------------------------------------------------------
     #  @param   self        The class itself, Python standard
     #  @param   x           The x location to shift the buttons by when the
-    #                       button is drawn to the surface in the update method
+    #                       button is drawn to the surface in the execute_tick method
     #  @param   y           The y location to shift the buttons by when the
-    #                       button is drawn to the surface in the update method
+    #                       button is drawn to the surface in the execute_tick method
     #  @param   h_pad       Number the extra pixels to pad the buttons by (on
     #  the
     #                       left/right)
@@ -132,7 +132,7 @@ class cOptionsMenu:
     #  @param   background  The background to use for the buttons (what will
     # show
     #                       up behind the buttons).  This is often the
-    #                       surface that they will be blitted to via the update
+    #                       surface that they will be blitted to via the execute_tick
     #                       method
     #  @param   buttonList  This is a list of buttons to be added (though
     #                       more buttons can be added via another method).  The
@@ -151,8 +151,8 @@ class cOptionsMenu:
 
     def __init__(self, x, y, h_pad, v_pad, orientation, number, background,
                  buttonList):
-        ## menu items
-        self.menu_items = []  # List of menu items
+        ## content items
+        self.menu_items = []  # List of content items
         self.font = pygame.font.Font(None, 32)  # Font to use
 
         self.x = x  # Top left corner (of surface)
@@ -171,14 +171,14 @@ class cOptionsMenu:
 
         self.background = background.copy()  # The unedited background image
         self.draw_surface = background  # Surface to draw to
-        self.centered = False  # True if the menu is centered
-        self.centeredOnScreen = False  # True if the menu is centered
+        self.centered = False  # True if the content is centered
+        self.centeredOnScreen = False  # True if the content is centered
         self.update_buttons = True  # True if the positions of the
         # buttons need to be updated
-        self.refresh_whole_surface_on_load = False  # When the menu is first
+        self.refresh_whole_surface_on_load = False  # When the content is first
         # displayed (when the event
         # EVENT_CHANGE_STATE is given to
-        # the update method), the entire
+        # the execute_tick method), the entire
         # self.draw_surface will be
         # updated
 
@@ -229,7 +229,7 @@ class cOptionsMenu:
     # ]--------------------------------------
     def set_image_highlight_thickness(self, new_thick):
         old_th = self.image_highlight_offset
-        # We need to update the width of the button images now (the images
+        # We need to execute_tick the width of the button images now (the images
         # themselves will be updated before the next refresh/re-draw).  Note
         # that
         # we only change the rect on the image buttons since we only
@@ -276,7 +276,7 @@ class cOptionsMenu:
     def set_font(self, font):
         self.font = font
 
-        # We need to update the width and height of the text buttons since we
+        # We need to execute_tick the width and height of the text buttons since we
         # calculated their width and height based on the font
         for button in self.menu_items:
             if button['b_image'] == None:
@@ -316,10 +316,10 @@ class cOptionsMenu:
     #  @param   x      The x (horizontal location)
     #  @param   y      The y (vertical location)
     #
-    #  This method sets the x and y locations for the menu.  By default, this
-    #  sets the position of the menu with respect to the top left corner of the
+    #  This method sets the x and y locations for the content.  By default, this
+    #  sets the position of the content with respect to the top left corner of the
     #  self.draw_surface.  If 'centered' is true, then this is the location of
-    #  the center of the menu.
+    #  the center of the content.
     #
     def set_position(self, x, y):
         self.x = x
@@ -329,16 +329,16 @@ class cOptionsMenu:
     ## ---[ set_center
     # ]---------------------------------------------------------
     #  @param   self           The class itself, Python standard
-    #  @param   centered       A boolean, centers the menu if it is True,
+    #  @param   centered       A boolean, centers the content if it is True,
     # default
     #                          value is True
-    #  @param   centeredOnScreen  If this is true, then the menu will be
+    #  @param   centeredOnScreen  If this is true, then the content will be
     # centered
     #                             on the entire self.draw_surface surface.
     #
-    #  When passed a value of True, this centers the menu at the self.x and
+    #  When passed a value of True, this centers the content at the self.x and
     #  self.y locations.  If False is passed to it, then this makes the top left
-    #  corner of the menu start at the x and y location with respect to the
+    #  corner of the content start at the x and y location with respect to the
     #  self.draw_surface.  If centerScreen is True, then self.centered is set to
     #  true, regardless of the value passed in
     #
@@ -354,9 +354,9 @@ class cOptionsMenu:
     ## ---[ add_buttons
     # ]--------------------------------------------------------
     #  @param   self         The class itself, Python standard
-    #  @param   buttonList   List of menu buttons to be added
+    #  @param   buttonList   List of content buttons to be added
     #
-    #  Used to add button(s) to the menu
+    #  Used to add button(s) to the content
     #
     def add_buttons(self, buttonList):
         for button in buttonList:
@@ -368,7 +368,7 @@ class cOptionsMenu:
     #  @param   self         The class itself, Python standard
     #  @param   indexList    List of indexes to be removed
     #
-    #  Used to remove button(s) from the menu
+    #  Used to remove button(s) from the content
     #
     def remove_buttons(self, indexList):
         old_contained_rect = self.contained_rect
@@ -384,7 +384,7 @@ class cOptionsMenu:
     # ]--------------------------------------------
     #  @param   self         The class itself, Python standard
     #
-    #  This method is just used to update the location of the buttons when the
+    #  This method is just used to execute_tick the location of the buttons when the
     #  a change is made
     #
     def update_button_locations(self):
@@ -600,7 +600,7 @@ class cOptionsMenu:
 
             # Add the width/height to the position based on the orientation
             # of the
-            # menu.  Add in the padding.
+            # content.  Add in the padding.
             if self.orientation == 'vertical':
                 y_loc += max_height + self.vertical_padding
             else:
@@ -651,7 +651,7 @@ class cOptionsMenu:
                 temp_rect = button['rect'].move(button['offset'])
                 self.contained_rect.union_ip(temp_rect)
 
-    ## ---[ update
+    ## ---[ execute_tick
     # ]-------------------------------------------------------------
     #  @param   self      The class itself, Python standard
     #  @param   e         The last event
@@ -660,7 +660,7 @@ class cOptionsMenu:
     #  @return            A list of rectangles of where the screen changed
     #  @return            The new state for the game
     #
-    #  Update the menu surface, redraw it to the stored surface
+    #  Update the content surface, redraw it to the stored surface
     # self.draw_surface
     #
     def update(self, c_state=-1):
@@ -677,8 +677,8 @@ class cOptionsMenu:
         o = self.orientation
         n = self.change_number
 
-        # Should be the first transition when the menu is made, and sets up
-        # the menu
+        # Should be the first transition when the content is made, and sets up
+        # the content
         if c_state == -1:
 
             c_state = 0  # default button (starts at topmost button)
@@ -729,7 +729,7 @@ class cOptionsMenu:
         rect_list = []
 
         # If buttons have been changed (added button(s), deleted button(s),
-        # changed colors, etc, etc), then we need to update the button locations
+        # changed colors, etc, etc), then we need to execute_tick the button locations
         # and images
         if self.update_buttons:
             self.update_button_locations()

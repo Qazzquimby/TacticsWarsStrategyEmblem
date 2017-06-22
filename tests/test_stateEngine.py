@@ -1,0 +1,25 @@
+from unittest import TestCase
+
+import display
+import session
+import state_engine
+
+
+class TestStateEngine(TestCase):
+    def setUp(self):
+        self.display = display.Display()
+        self.session = session.Session()
+        self.state_engine = state_engine.StateEngine(display, session)
+
+    def test_setup_initial_screen(self):
+        self.state_engine.setup_initial_screen()
+        if len(self.state_engine._screen_stack) > 0:
+            self.fail()
+
+    def test_something_else(self):
+        self.fail()
+
+
+class TestTest(TestCase):
+    def test___init__(self):
+        self.fail()
