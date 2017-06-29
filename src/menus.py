@@ -63,7 +63,7 @@ class ConnectionScreen(src.screen.GameScreen):
         self.menu = ConnectionMenu()
 
     def update(self, clock):
-        self.menu.update(self.display.display, clock)
+        self.menu.update(self.display.get_display(), clock)
         # TODO in GameScreen define a type for Actions, so that they can be
         # remembered
         #  and undone

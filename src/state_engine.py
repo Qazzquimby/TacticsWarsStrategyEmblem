@@ -11,8 +11,7 @@ class StateEngine(object):
         self.setup_initial_screen()
 
     def setup_initial_screen(self):
-        self.main_game_screen = main_game_screen.MainGameScreen(self.display,
-                                                                self.session)
+        self.main_game_screen = main_game_screen.MainGameScreen(self.display, self.session)
 
         self.push_screen()
 

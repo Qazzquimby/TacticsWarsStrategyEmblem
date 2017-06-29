@@ -1,24 +1,27 @@
 # import win32api
 import pygame
+import size_constants
 
 
 class Display(object):
     def __init__(self):
-        self.screen_width = 960
-        self.screen_height = 640
+        self.display_size_multiplier = 1
 
-        self.display_width = 960  # win32api.GetSystemMetrics(0)
-        self.display_height = 640  # win32api.GetSystemMetrics(1)
+        self._display_width = size_constants.SCREEN_WIDTH * self.display_size_multiplier
+        # win32api.GetSystemMetrics(0)
+        self._display_height = size_constants.SCREEN_HEIGHT * self.display_size_multiplier
+        # win32api.GetSystemMetrics(1)
 
-        self.surface = pygame.Surface((self.screen_width,
-                                       self.screen_height))
-        self.display = pygame.display.set_mode((self.display_width,
-                                                self.display_height))
+        self._surface = pygame.Surface((size_constants.SCREEN_WIDTH,
+                                        size_constants.SCREEN_HEIGHT))
+
+        self._display = pygame.display.set_mode((self._display_width,
+                                                 self._display_height))
 
     def flip_display(self):
-        self.display.blit(
+        self._display.blit(
             pygame.transform.scale(
-                self.surface, (self.display_width, self.display_height)),
+                self._surface, (self._display_width, self._display_height)),
             (0, 0))
         pygame.display.flip()
 
@@ -28,3 +31,6 @@ class Display(object):
     def update_rects(self, rect_list):
         """Updates only the area signified by the rect_list"""
         pygame.display.update(rect_list)
+
+    def get_display(self):
+        return self._display
