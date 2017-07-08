@@ -5,17 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="720812d0-50dc-4d5c-bcee-ad184f39bae6" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/layers.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Entities.py" afterPath="$PROJECT_DIR$/src/entities.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Entities.py" afterPath="$PROJECT_DIR$/src/Entities.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/display.py" afterPath="$PROJECT_DIR$/src/display.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/game_map_and_menu.py" afterPath="$PROJECT_DIR$/src/game_map_and_menu.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.py" afterPath="$PROJECT_DIR$/src/main.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main_game_screen.py" afterPath="$PROJECT_DIR$/src/main_game_screen.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/map_drawing.py" afterPath="$PROJECT_DIR$/src/map_drawing.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/screen.py" afterPath="$PROJECT_DIR$/src/screen.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/size_constants.py" afterPath="$PROJECT_DIR$/src/size_constants.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sprites.py" afterPath="$PROJECT_DIR$/src/sprites.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/state_engine.py" afterPath="$PROJECT_DIR$/src/state_engine.py" />
     </list>
     <ignored path="TacticsWarsStrategyEmblem.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -47,18 +43,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="display.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/display.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="550">
-              <caret line="38" column="0" lean-forward="false" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-              <folding>
-                <element signature="e#18#31#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="state_engine.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/state_engine.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -81,11 +65,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main_game_screen.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main_game_screen.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main_game_screen.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="17" column="12" lean-forward="true" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
+            <state relative-caret-position="340">
+              <caret line="17" column="12" lean-forward="false" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -96,32 +80,54 @@
       <file leaf-file-name="game_map_and_menu.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/game_map_and_menu.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1060">
-              <caret line="53" column="0" lean-forward="false" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+            <state relative-caret-position="212">
+              <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
+                <element signature="e#1554#2276#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="map_drawing.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="map_drawing.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/map_drawing.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="3" column="25" lean-forward="true" selection-start-line="3" selection-start-column="25" selection-end-line="3" selection-end-column="25" />
-              <folding />
+            <state relative-caret-position="418">
+              <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#14#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Entities.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Entities.py">
+      <file leaf-file-name="MapFSM.py" pinned="false" current-in-tab="false">
+        <entry file="file://D:/Users/qazz/Documents/tactic-wars-strategy-emblem/src/MapFSM.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="580">
-              <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+            <state relative-caret-position="297">
+              <caret line="617" column="15" lean-forward="true" selection-start-line="617" selection-start-column="0" selection-end-line="624" selection-end-column="77" />
+              <folding>
+                <element signature="e#7175#8392#0" expanded="false" />
+                <element signature="e#8750#16236#0" expanded="false" />
+                <element signature="e#16274#17053#0" expanded="false" />
+                <element signature="e#17128#17964#0" expanded="false" />
+                <element signature="e#18008#23337#0" expanded="false" />
+                <element signature="e#23503#24334#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="entities.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/entities.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="200">
+              <caret line="10" column="40" lean-forward="false" selection-start-line="10" selection-start-column="40" selection-end-line="10" selection-end-column="40" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
+                <marker date="1499547242348" expanded="true" signature="64:216" ph="..." />
+                <marker date="1499547242348" expanded="true" signature="179:216" ph="..." />
               </folding>
             </state>
           </provider>
@@ -130,8 +136,8 @@
       <file leaf-file-name="sprites.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/sprites.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="34" column="21" lean-forward="false" selection-start-line="34" selection-start-column="21" selection-end-line="34" selection-end-column="21" />
+            <state relative-caret-position="-660">
+              <caret line="9" column="54" lean-forward="false" selection-start-line="9" selection-start-column="54" selection-end-line="9" selection-end-column="54" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -202,13 +208,15 @@
         <option value="$PROJECT_DIR$/src/size_constants.py" />
         <option value="$PROJECT_DIR$/src/display.py" />
         <option value="$PROJECT_DIR$/src/Entities.py" />
-        <option value="$PROJECT_DIR$/src/game_map_and_menu.py" />
-        <option value="$PROJECT_DIR$/src/sprites.py" />
         <option value="$PROJECT_DIR$/src/main.py" />
         <option value="$PROJECT_DIR$/src/state_engine.py" />
-        <option value="$PROJECT_DIR$/src/map_drawing.py" />
         <option value="$PROJECT_DIR$/src/screen.py" />
+        <option value="$PROJECT_DIR$/src/map_layer_constants.py" />
         <option value="$PROJECT_DIR$/src/main_game_screen.py" />
+        <option value="$PROJECT_DIR$/src/game_map_and_menu.py" />
+        <option value="$PROJECT_DIR$/src/map_drawing.py" />
+        <option value="$PROJECT_DIR$/src/entities.py" />
+        <option value="$PROJECT_DIR$/src/sprites.py" />
       </list>
     </option>
   </component>
@@ -599,7 +607,14 @@
       <option name="project" value="LOCAL" />
       <updated>1498763945185</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Entities load sprite sheets.&#10;Sprite sheets are cropped to smallest top left rectangle not containing empty rows or columns">
+      <created>1499493338804</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1499493338804</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -636,7 +651,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18854167" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -647,7 +661,7 @@
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1015625" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32980973" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26849896" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26849896" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -673,22 +687,23 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Restructured initial documents. &#10;Added testing interface." />
     <MESSAGE value="Begun work on graphics" />
-    <option name="LAST_COMMIT_MESSAGE" value="Begun work on graphics" />
+    <MESSAGE value="Entities load sprite sheets.&#10;Sprite sheets are cropped to smallest top left rectangle not containing empty rows or columns" />
+    <option name="LAST_COMMIT_MESSAGE" value="Entities load sprite sheets.&#10;Sprite sheets are cropped to smallest top left rectangle not containing empty rows or columns" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="36" />
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/map_drawing.py</url>
+          <line>29</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="39" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/pygame_toolbox/graphics/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4300">
-          <caret line="216" column="0" lean-forward="false" selection-start-line="216" selection-start-column="0" selection-end-line="216" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../TacticsWarsStrategyEmblem/src/main.py" />
     <entry file="file://$PROJECT_DIR$/../../TacticsWarsStrategyEmblem/src/settings.py" />
     <entry file="file://$PROJECT_DIR$/../../TacticsWarsStrategyEmblem/src/input.py" />
@@ -830,16 +845,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://D:/Users/qazz/Documents/tactic-wars-strategy-emblem/src/MapFSM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="268">
-          <caret line="192" column="1" lean-forward="false" selection-start-line="192" selection-start-column="1" selection-end-line="193" selection-end-column="64" />
-          <folding>
-            <element signature="e#16274#17053#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/session.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="320">
@@ -860,14 +865,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="140">
           <caret line="7" column="29" lean-forward="true" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/size_constants.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="5" column="26" lean-forward="false" selection-start-line="5" selection-start-column="26" selection-end-line="5" selection-end-column="26" />
           <folding />
         </state>
       </provider>
@@ -898,16 +895,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sprites.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="34" column="21" lean-forward="false" selection-start-line="34" selection-start-column="21" selection-end-line="34" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="472">
@@ -915,34 +902,6 @@
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Entities.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="580">
-          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/game_map_and_menu.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1060">
-          <caret line="53" column="0" lean-forward="false" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/map_drawing.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="3" column="25" lean-forward="true" selection-start-line="3" selection-start-column="25" selection-end-line="3" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -964,12 +923,86 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/size_constants.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="5" column="26" lean-forward="false" selection-start-line="5" selection-start-column="26" selection-end-line="5" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/layers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main_game_screen.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="17" column="12" lean-forward="true" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
+        <state relative-caret-position="340">
+          <caret line="17" column="12" lean-forward="false" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://D:/Users/qazz/Documents/tactic-wars-strategy-emblem/src/MapFSM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="297">
+          <caret line="617" column="15" lean-forward="true" selection-start-line="617" selection-start-column="0" selection-end-line="624" selection-end-column="77" />
+          <folding>
+            <element signature="e#7175#8392#0" expanded="false" />
+            <element signature="e#8750#16236#0" expanded="false" />
+            <element signature="e#16274#17053#0" expanded="false" />
+            <element signature="e#17128#17964#0" expanded="false" />
+            <element signature="e#18008#23337#0" expanded="false" />
+            <element signature="e#23503#24334#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/entities.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="10" column="40" lean-forward="false" selection-start-line="10" selection-start-column="40" selection-end-line="10" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+            <marker date="1499547242348" expanded="true" signature="64:216" ph="..." />
+            <marker date="1499547242348" expanded="true" signature="179:216" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sprites.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-660">
+          <caret line="9" column="54" lean-forward="false" selection-start-line="9" selection-start-column="54" selection-end-line="9" selection-end-column="54" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/game_map_and_menu.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="212">
+          <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+            <element signature="e#1554#2276#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/map_drawing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
           </folding>
         </state>
       </provider>
