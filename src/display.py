@@ -34,3 +34,6 @@ class Display(object):
 
     def get_display(self):
         return self._display
+
+    def blit(self, surface: pygame.Surface, dest):
+        self._surface.blit(surface, dest)

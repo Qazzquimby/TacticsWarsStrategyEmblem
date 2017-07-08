@@ -33,7 +33,7 @@ class Main(object):
     def execute_tick(self):
         current_input = self.input_interpreter.interpret_input()
         self.state_engine.execute_tick(current_input)
-        self.display.execute_tick()
+        # self.display.execute_tick()
         self.clock.wait_for_next_tick()
 
     def uninit(self):

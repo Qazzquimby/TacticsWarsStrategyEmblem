@@ -28,8 +28,13 @@ class GameScreen(abc.ABC):
         self.session = session  # type: session.Session
         self.name = None  # type: str
         self.content = None
-        self.__receive_input = None
 
     def receive_input(self, curr_input: user_input.Input):
         print("Sending {} to {}".format(curr_input.name, self.name))
         self.__receive_input(curr_input)
+
+    def execute_tick(self):
+        raise NotImplementedError
+
+    def __receive_input(self, curr_input):
+        raise NotImplementedError

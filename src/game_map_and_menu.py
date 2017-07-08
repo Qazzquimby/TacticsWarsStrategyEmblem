@@ -5,13 +5,38 @@ import Entities
 
 class GameMapAndMenu(object):
     def __init__(self):
-        map = GameMap()
+        self.map = GameMap()
 
+
+class Tile(object):
+    def __init__(self, terrain: Entities.Terrain, building: Entities.Building,
+                 unit: Entities.Unit):
+        self.terrain = terrain
+        self.building = building
+        self.unit = unit
 
 class GameMap(object):
     def __init__(self):
-        self._map = [[]]
+        self._map = []
         self._init_map("../maps/map_filename.xml")
+
+    def get_terrain(self, x, y) -> Entities.Terrain:
+        tile = self.get_tile(x, y)
+        terrain = tile.terrain
+        return terrain
+
+    def get_building(self, x, y) -> Entities.Building:
+        tile = self.get_tile(x, y)
+        building = tile.building
+        return building
+
+    def get_unit(self, x, y) -> Entities.Unit:
+        tile = self.get_tile(x, y)
+        unit = tile.unit
+        return unit
+
+    def get_tile(self, x, y) -> Tile:
+        return self._map[x][y]
 
     def _init_map(self, map_filename):
         CHARACTERS_PER_NAME = 6
@@ -29,15 +54,11 @@ class GameMap(object):
                 terrain = Entities.Grass()
                 building = Entities.NullEntity()
                 unit = Entities.NullEntity()
-                new_space = Space(terrain, building, unit)
+                new_space = Tile(terrain, building, unit)
                 column_list.append(new_space)
             return column_list
 
         parse_map_file(map_filename)
 
 
-class Space(object):
-    def __init__(self, terrain: Entities.Entity, building: Entities.Entity, unit: Entities.Entity):
-        self.terrain = terrain
-        self.building = building
-        self.unit = unit
+
