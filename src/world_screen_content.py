@@ -1,13 +1,17 @@
-from location import Location
+import typing
 import xml.etree.ElementTree as ElementTree
+
 import entities
 import layers
-import typing
+import sprites
+from point import Location
 
 
 class MapAndUI(object):
     def __init__(self):
+        self.top_bar = TopBar()
         self.map = Map()
+        self.world_menu = WorldMenu()
 
 
 class Tile(object):
@@ -23,33 +27,33 @@ class Map(object):
         self._map = []
         self._init_map("../maps/map_filename.xml")
 
-    def get_entities(self, layer: typing.Type[layers.Layer], x, y):
+    def get_entities(self, layer: typing.Type[layers.Layer], location: Location):
         if layer == layers.TerrainLayer:
-            return self.get_terrain(x, y)
+            return self.get_terrain(location)
         elif layer == layers.BuildingLayer:
-            return self.get_building(x, y)
+            return self.get_building(location)
         elif layer == layers.UnitLayer:
-            return self.get_unit(x, y)
+            return self.get_unit(location)
         else:
             raise TypeError
 
-    def get_terrain(self, x, y) -> entities.Terrain:
-        tile = self.get_tile(x, y)
+    def get_terrain(self, location: Location) -> entities.Terrain:
+        tile = self.get_tile(location)
         terrain = tile.terrain
         return terrain
 
-    def get_building(self, x, y) -> entities.Building:
-        tile = self.get_tile(x, y)
+    def get_building(self, location: Location) -> entities.Building:
+        tile = self.get_tile(location)
         building = tile.building
         return building
 
-    def get_unit(self, x, y) -> entities.Unit:
-        tile = self.get_tile(x, y)
+    def get_unit(self, location: Location) -> entities.Unit:
+        tile = self.get_tile(location)
         unit = tile.unit
         return unit
 
-    def get_tile(self, x, y) -> Tile:
-        return self._map[x][y]
+    def get_tile(self, location: Location) -> Tile:
+        return self._map[location.x][location.y]
 
     def get_width(self):
         return len(self._map)
@@ -78,3 +82,13 @@ class Map(object):
             return column_list
 
         parse_map_file(map_filename)
+
+
+class TopBar(object):
+    def __init__(self):
+        self.sprite = sprites.SpriteAnimation("top_bar.png").sprite_sheet.surface
+
+
+class WorldMenu(object):
+    def __init__(self):
+        self.sprite = sprites.SpriteAnimation("world_menu.png").sprite_sheet.surface

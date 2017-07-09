@@ -5,10 +5,10 @@ import abc
 
 class Entity(abc.ABC):
     def __init__(self):
-        self.animation = NotImplemented  # type: pygame.Surface
+        self.animation = NotImplemented  # type: sprites.SpriteAnimation
 
     def get_sprite(self):
-        return self.animation.get_sprite
+        return self.animation.get_sprite()
 
 class Terrain(Entity):
     def __init__(self):

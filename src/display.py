@@ -1,15 +1,17 @@
 # import win32api
 import pygame
+
 import size_constants
+from point import Point
 
 
 class Display(object):
     def __init__(self):
-        self.display_size_multiplier = 1
+        self.display_size_multiplier = 1.5
 
-        self._display_width = size_constants.SCREEN_WIDTH * self.display_size_multiplier
+        self._display_width = int(size_constants.SCREEN_WIDTH * self.display_size_multiplier)
         # win32api.GetSystemMetrics(0)
-        self._display_height = size_constants.SCREEN_HEIGHT * self.display_size_multiplier
+        self._display_height = int(size_constants.SCREEN_HEIGHT * self.display_size_multiplier)
         # win32api.GetSystemMetrics(1)
 
         self._surface = pygame.Surface((size_constants.SCREEN_WIDTH,
@@ -35,5 +37,8 @@ class Display(object):
     def get_display(self):
         return self._display
 
-    def blit(self, surface: pygame.Surface, dest):
+    def blit(self, surface: pygame.Surface, dest_point: Point):
+        dest = (dest_point.x, dest_point.y)
         self._surface.blit(surface, dest)
+
+

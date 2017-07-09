@@ -1,14 +1,15 @@
 import screen
-import map_drawing
-import game_map_and_menu
+import world_drawing
+import world_screen_content
 import user_input
+import pygame
 
 
 class MainGameScreen(screen.GameScreen):
     def __init__(self, display, session):
         screen.GameScreen.__init__(self, display, session)
-        self.content = game_map_and_menu.MapAndUI()
-        self.animation = map_drawing.MapDrawing(self.content, display)
+        self.content = world_screen_content.MapAndUI()
+        self.animation = world_drawing.MapDrawing(self.content, display)
 
     def execute_tick(self):
         #  Game logic goes here

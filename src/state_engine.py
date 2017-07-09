@@ -1,4 +1,4 @@
-import main_game_screen
+import world_screen
 import screen
 
 class StateEngine(object):
@@ -11,7 +11,7 @@ class StateEngine(object):
         self.setup_initial_screen()
 
     def setup_initial_screen(self):
-        self.main_game_screen = main_game_screen.MainGameScreen(self.display, self.session)
+        self.main_game_screen = world_screen.MainGameScreen(self.display, self.session)
 
         self.push_screen(self.main_game_screen)
 
