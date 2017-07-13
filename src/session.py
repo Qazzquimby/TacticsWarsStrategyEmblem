@@ -17,4 +17,4 @@ class Session(object):
         return self._game_running
 
     def quit_game(self):
-        self.game_running = False
+        self._game_running = False

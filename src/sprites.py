@@ -6,8 +6,8 @@ import display
 
 
 class SpriteAnimation(object):
-    def __init__(self, file_name):
-        self.sprite_sheet = SpriteSheet(file_name)
+    def __init__(self, sprite_location, file_name):
+        self.sprite_sheet = SpriteSheet(sprite_location, file_name)
         self.sprite_list = self.sprite_sheet.get_sprite_list()
 
     def get_sprite(self):
@@ -15,8 +15,8 @@ class SpriteAnimation(object):
 
 
 class SpriteSheet(object):
-    def __init__(self, file_name):
-        self.surface = self._load_sprite_sheet(file_name)
+    def __init__(self, sprite_location, file_name):
+        self.surface = self._load_sprite_sheet(sprite_location, file_name)
         self.sheet_tile_width = self._get_tile_width()
         self.sheet_tile_height = self._get_tile_height()
         self._trim_sprite_sheet()
@@ -25,8 +25,8 @@ class SpriteSheet(object):
     def get_sprite_list(self):
         return self.sprite_list
 
-    def _load_sprite_sheet(self, file_name):
-        converted_file_name = "../sprites/" + file_name
+    def _load_sprite_sheet(self, sprite_location, file_name):
+        converted_file_name = "../" + sprite_location + file_name + ".png"
         return pygame.image.load(converted_file_name).convert()
 
     def _get_tile_height(self):

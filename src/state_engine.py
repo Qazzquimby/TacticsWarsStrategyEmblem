@@ -1,5 +1,8 @@
 import world_screen
 import screen
+from world_setup import WorldSetup
+import player
+import army
 
 class StateEngine(object):
     def __init__(self, display, session):
@@ -11,7 +14,10 @@ class StateEngine(object):
         self.setup_initial_screen()
 
     def setup_initial_screen(self):
-        self.main_game_screen = world_screen.MainGameScreen(self.display, self.session)
+
+        world_setup = WorldSetup()
+        world_setup.add_player(army.IronLegion())
+        self.main_game_screen = world_screen.MainGameScreen(self.display, self.session, world_setup)
 
         self.push_screen(self.main_game_screen)
 

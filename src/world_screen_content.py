@@ -5,25 +5,29 @@ import entities
 import layers
 import sprites
 from point import Location
-
+import typing
+import terrain
+import army
 
 class MapAndUI(object):
-    def __init__(self):
+    def __init__(self, world_setup):
         self.top_bar = TopBar()
-        self.map = Map()
+        self.map = Map(world_setup)
         self.world_menu = WorldMenu()
 
 
 class Tile(object):
-    def __init__(self, terrain: entities.Terrain, building: entities.Building,
-                 unit: entities.Unit):
+    def __init__(self, terrain: terrain.Terrain,
+                 building: typing.Union[entities.Building, entities.NullEntity],
+                 unit: typing.Union[entities.Unit, entities.NullEntity]):
         self.terrain = terrain
         self.building = building
         self.unit = unit
 
 
 class Map(object):
-    def __init__(self):
+    def __init__(self, world_setup):
+        self.world_setup = world_setup
         self._map = []
         self._init_map("../maps/map_filename.xml")
 
@@ -37,7 +41,7 @@ class Map(object):
         else:
             raise TypeError
 
-    def get_terrain(self, location: Location) -> entities.Terrain:
+    def get_terrain(self, location: Location) -> terrain.Terrain:
         tile = self.get_tile(location)
         terrain = tile.terrain
         return terrain
@@ -73,12 +77,14 @@ class Map(object):
 
         def create_column(column_xml: ElementTree.Element):
             column_list = []
-            for space in column_xml:
-                terrain = entities.Grass()
-                building = entities.NullEntity()
-                unit = entities.NullEntity()
-                new_space = Tile(terrain, building, unit)
-                column_list.append(new_space)
+            for tile in column_xml:
+                tile_terrain = terrain.Grass()
+                # tile_building = entities.NullEntity()
+                tile_building = army.HQ(self.world_setup._players[0], self.world_setup._players[
+                    0].get_army())
+                tile_unit = entities.NullEntity()
+                new_tile = Tile(tile_terrain, tile_building, tile_unit)
+                column_list.append(new_tile)
             return column_list
 
         parse_map_file(map_filename)
@@ -86,9 +92,9 @@ class Map(object):
 
 class TopBar(object):
     def __init__(self):
-        self.sprite = sprites.SpriteAnimation("top_bar.png").sprite_sheet.surface
+        self.sprite = sprites.SpriteAnimation("", "sprites/top_bar").sprite_sheet.surface
 
 
 class WorldMenu(object):
     def __init__(self):
-        self.sprite = sprites.SpriteAnimation("world_menu.png").sprite_sheet.surface
+        self.sprite = sprites.SpriteAnimation("", "sprites/world_menu").sprite_sheet.surface

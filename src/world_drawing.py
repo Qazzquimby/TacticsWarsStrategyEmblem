@@ -31,6 +31,7 @@ class MapDrawing(object):
 
     def draw_map(self):
         self.draw_map_layer(layers.TerrainLayer)
+        self.draw_map_layer(layers.BuildingLayer)
         # todo other layers
 
     def draw_map_layer(self, layer: typing.Type[layers.Layer]):
