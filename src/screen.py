@@ -31,10 +31,10 @@ class GameScreen(abc.ABC):
 
     def receive_input(self, curr_input: user_input.Input):
         print("Sending {} to {}".format(curr_input.name, self.name))
-        self.__receive_input(curr_input)
+        self._receive_input(curr_input)
 
     def execute_tick(self):
         raise NotImplementedError
 
-    def __receive_input(self, curr_input):
+    def _receive_input(self, curr_input: user_input.Input):
         raise NotImplementedError

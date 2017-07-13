@@ -2,7 +2,7 @@ import abc
 
 
 class Layer(abc.ABC):
-    pass
+    priority = NotImplemented  # type: int
 
 
 class TerrainLayer(Layer):

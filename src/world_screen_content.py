@@ -8,6 +8,7 @@ from point import Location
 import typing
 import terrain
 import army
+import ironlegion
 
 class MapAndUI(object):
     def __init__(self, world_setup):
@@ -29,7 +30,7 @@ class Map(object):
     def __init__(self, world_setup):
         self.world_setup = world_setup
         self._map = []
-        self._init_map("../maps/map_filename.xml")
+        self._init_map(self.world_setup.get_map_path())
 
     def get_entities(self, layer: typing.Type[layers.Layer], location: Location):
         if layer == layers.TerrainLayer:
@@ -79,9 +80,9 @@ class Map(object):
             column_list = []
             for tile in column_xml:
                 tile_terrain = terrain.Grass()
-                # tile_building = entities.NullEntity()
-                tile_building = army.HQ(self.world_setup._players[0], self.world_setup._players[
-                    0].get_army())
+                tile_building = ironlegion.HQ(self.world_setup._players[0],
+                                             self.world_setup._players[
+                    0].get_army()) #fixme use the xml ???
                 tile_unit = entities.NullEntity()
                 new_tile = Tile(tile_terrain, tile_building, tile_unit)
                 column_list.append(new_tile)

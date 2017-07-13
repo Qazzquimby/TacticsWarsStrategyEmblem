@@ -1,5 +1,6 @@
 import pygame
 import abc
+import typing
 
 """Classes related to receiving and interpreting user input"""
 
@@ -8,15 +9,17 @@ KEY_DOWN = 2
 
 
 class Input(abc.ABC):
+    _PRIORITY = None  # type: int
+    name = None  # type: str
+
     def __init__(self):
-        self._PRIORITY = None
-        self.name = None
+        pass
 
     def __lt__(self, other):
         return self.priority < other.priority
 
     @property
-    def priority(self):
+    def priority(self) -> int:
         return self._PRIORITY
 
 
@@ -26,7 +29,7 @@ class InputInterpreter(object):
     def __init__(self):
         self.control_map = ControlMap()
 
-    def interpret_input(self) -> Input:
+    def interpret_input(self) -> typing.Optional[Input]:
         """Returns the action to be performed this frame.
 
         Looks at this frame's key presses, maps them to their inputs,
@@ -38,19 +41,15 @@ class InputInterpreter(object):
         else:
             return None
 
-    def _get_inputs(self) -> Input:
+    def _get_inputs(self) -> typing.List[Input]:
         """Maps this frame's key presses to their Inputs"""
         inputs = []
         for event in pygame.event.get():
             curr_input = None
             if event.type == pygame.KEYDOWN:
-                curr_input = self.control_map.get_input((
-                    pygame.key.name(event.key),
-                    KEY_DOWN))
+                curr_input = self.control_map.get_input((pygame.key.name(event.key), KEY_DOWN))
             elif event.type == pygame.KEYUP:
-                curr_input = self.control_map.get_input((
-                    pygame.key.name(event.key),
-                    KEY_UP))
+                curr_input = self.control_map.get_input((pygame.key.name(event.key), KEY_UP))
 
             if callable(curr_input):
                 inputs.append(curr_input())
@@ -73,7 +72,7 @@ class ControlMap(object):
             ("down", True): Down,
         }
 
-    def get_input(self, key: (str, int)) -> Input:
+    def get_input(self, key: (str, int)) -> typing.Optional[typing.Type[Input]]:
         """Returns the Input mapped to the keypress"""
         try:
             return self._input_dict[key]
@@ -82,10 +81,11 @@ class ControlMap(object):
 
 
 class Confirm(Input):
+    _PRIORITY = 1
+    name = "confirm"
+
     def __init__(self):
         Input.__init__(self)
-        self._PRIORITY = 1
-        self.name = "confirm"
 
     @property
     def priority(self):
@@ -93,10 +93,11 @@ class Confirm(Input):
 
 
 class Back(Input):
+    _PRIORITY = 2
+    name = "back"
+
     def __init__(self):
         Input.__init__(self)
-        self._PRIORITY = 2
-        self.name = "back"
 
     @property
     def priority(self):
@@ -104,10 +105,11 @@ class Back(Input):
 
 
 class Left(Input):
+    _PRIORITY = 3
+    name = "left"
+
     def __init__(self):
         Input.__init__(self)
-        self._PRIORITY = 3
-        self.name = "left"
 
     @property
     def priority(self):
@@ -115,10 +117,11 @@ class Left(Input):
 
 
 class Up(Input):
+    _PRIORITY = 4
+    name = "up"
+
     def __init__(self):
         Input.__init__(self)
-        self._PRIORITY = 4
-        self.name = "up"
 
     @property
     def priority(self):
@@ -126,10 +129,11 @@ class Up(Input):
 
 
 class Right(Input):
+    _PRIORITY = 5
+    name = "right"
+
     def __init__(self):
         Input.__init__(self)
-        self._PRIORITY = 5
-        self.name = "right"
 
     @property
     def priority(self):
@@ -137,10 +141,11 @@ class Right(Input):
 
 
 class Down(Input):
+    _PRIORITY = 6
+    name = "down"
+
     def __init__(self):
         Input.__init__(self)
-        self._PRIORITY = 6
-        self.name = "down"
 
     @property
     def priority(self):

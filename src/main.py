@@ -11,6 +11,9 @@ import game_time
 
 class Main(object):
     def __init__(self):
+        pygame.init()
+        pygame.display.set_caption("Tactics Wars Strategy Emblem")
+
         self.session = session.Session()  # type: session.Session
         self.display = display.Display()  # type: display.Display
         self.state_engine = state_engine.StateEngine(self.display,
@@ -18,13 +21,8 @@ class Main(object):
         self.clock = game_time.Clock()  # type: game_time.Clock
         self.input_interpreter = user_input.InputInterpreter()  # type: user_input.InputInterpreter
 
-        self.init()
         self.game_loop()
         self.uninit()
-
-    def init(self):
-        pygame.init()
-        pygame.display.set_caption("Tactics Wars Strategy Emblem")
 
     def game_loop(self):
         while self.session.get_game_running():

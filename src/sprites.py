@@ -2,39 +2,38 @@ import pygame
 
 import point
 import size_constants
-import display
 
 
 class SpriteAnimation(object):
-    def __init__(self, sprite_location, file_name):
+    def __init__(self, sprite_location: str, file_name: str):
         self.sprite_sheet = SpriteSheet(sprite_location, file_name)
-        self.sprite_list = self.sprite_sheet.get_sprite_list()
+        self.sprite_list = self.sprite_sheet.get_sprite_list()  # type: list
 
-    def get_sprite(self):
+    def get_sprite(self) -> pygame.Surface:
         return self.sprite_list[0]  # todo add animation
 
 
 class SpriteSheet(object):
-    def __init__(self, sprite_location, file_name):
-        self.surface = self._load_sprite_sheet(sprite_location, file_name)
-        self.sheet_tile_width = self._get_tile_width()
-        self.sheet_tile_height = self._get_tile_height()
+    def __init__(self, sprite_location: str, file_name: str):
+        self.surface = self._load_sprite_sheet(sprite_location, file_name)  # type: pygame.Surface
+        self.sheet_tile_width = self._get_tile_width()  # type: int
+        self.sheet_tile_height = self._get_tile_height()  # type: int
         self._trim_sprite_sheet()
-        self.sprite_list = self._make_sprite_list()
+        self.sprite_list = self._make_sprite_list()  # type: list
 
-    def get_sprite_list(self):
+    def get_sprite_list(self) -> list:
         return self.sprite_list
 
-    def _load_sprite_sheet(self, sprite_location, file_name):
+    def _load_sprite_sheet(self, sprite_location: str, file_name: str):
         converted_file_name = "../" + sprite_location + file_name + ".png"
         return pygame.image.load(converted_file_name).convert()
 
-    def _get_tile_height(self):
+    def _get_tile_height(self) -> int:
         pixel_height = self.surface.get_height()
         tile_height = int(pixel_height / size_constants.TILE_SIZE)
         return tile_height
 
-    def _get_tile_width(self):
+    def _get_tile_width(self) -> int:
         pixel_width = self.surface.get_width()
         tile_width = int(pixel_width / size_constants.TILE_SIZE)
         return tile_width
@@ -59,7 +58,7 @@ class SpriteSheet(object):
                 self.sheet_tile_height = tile_y
                 break
 
-    def _is_column_empty(self, tile_x):
+    def _is_column_empty(self, tile_x: int) -> bool:
         is_empty = True
         for tile_y in range(self.sheet_tile_height):
             if not self._is_tile_empty(tile_x, tile_y):
@@ -67,7 +66,7 @@ class SpriteSheet(object):
                 break
         return is_empty
 
-    def _is_row_empty(self, tile_y):
+    def _is_row_empty(self, tile_y: int) -> bool:
         is_empty = True
         for tile_x in range(self.sheet_tile_width):
             if not self._is_tile_empty(tile_x, tile_y):
@@ -75,7 +74,7 @@ class SpriteSheet(object):
                 break
         return is_empty
 
-    def _is_tile_empty(self, tile_x, tile_y):
+    def _is_tile_empty(self, tile_x: int, tile_y: int) -> bool:
         is_empty = True
         for pixel_y in range(size_constants.TILE_SIZE):
             for pixel_x in range(size_constants.TILE_SIZE):
@@ -86,7 +85,7 @@ class SpriteSheet(object):
                     break
         return is_empty
 
-    def _is_pixel_empty(self, point: point.PixelPoint):
+    def _is_pixel_empty(self, point: point.PixelPoint) -> bool:
         sprite_color = self.surface.get_at((point.x, point.y))
         is_empty = sprite_color == (255, 255, 255)
         return is_empty
