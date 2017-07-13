@@ -1,4 +1,4 @@
-import display
+from display import Display
 import layers
 import typing
 import entities
@@ -8,8 +8,8 @@ import sprites
 
 
 class MapDrawing(object):
-    def __init__(self, content, display):
-        self.display = display
+    def __init__(self, content, display: Display):
+        self.display = display  # type: Display
         self.content = content
         self.top_bar = self.content.top_bar
         self.map = content.map
@@ -35,8 +35,8 @@ class MapDrawing(object):
         # todo other layers
 
     def draw_map_layer(self, layer: typing.Type[layers.Layer]):
-        for y in range(self.map.get_width()):
-            for x in range(self.map.get_height()):
+        for y in range(self.map.width):
+            for x in range(self.map.height):
                 location = point.Location(x, y)
                 self.draw_tile_layer(layer, location)
 
@@ -45,7 +45,7 @@ class MapDrawing(object):
         self.draw_entity(entity, location)
 
     def draw_entity(self, entity: entities.Entity, location: point.Location):
-        sprite = entity.get_sprite()
+        sprite = entity.sprite
         if sprite:
             screen_tile = point.TilePoint(location.x + self.map_center_offset.x,
                                           location.y + self.map_center_offset.y +
@@ -66,9 +66,9 @@ class MapDrawing(object):
 
         self.display.blit(sprite, screen_pixel)
 
-    def _init_map_larger_than_screen(self):
-        is_taller = self.map.get_height() > size_constants.MAP_TILE_HEIGHT
-        is_wider = self.map.get_width() > size_constants.MAP_TILE_WIDTH
+    def _init_map_larger_than_screen(self) -> bool:
+        is_taller = self.map.height > size_constants.MAP_TILE_HEIGHT
+        is_wider = self.map.width > size_constants.MAP_TILE_WIDTH
         is_larger = is_taller or is_wider
         return is_larger
 
@@ -76,6 +76,6 @@ class MapDrawing(object):
         if self.map_larger_than_screen:
             return point.PixelPoint(0, 0)
         else:
-            centered_x = int((size_constants.MAP_TILE_WIDTH - self.map.get_width()) / 2)
-            centered_y = int((size_constants.MAP_TILE_HEIGHT - self.map.get_height()) / 2)
+            centered_x = int((size_constants.MAP_TILE_WIDTH - self.map.width) / 2)
+            centered_y = int((size_constants.MAP_TILE_HEIGHT - self.map.height) / 2)
             return point.PixelPoint(centered_x, centered_y)

@@ -1,5 +1,3 @@
-
-
 class Session(object):
     def __init__(self):
         """Holds widely used game variables"""
@@ -13,7 +11,8 @@ class Session(object):
 
         self.connection_modes = ConnectionModes()
 
-    def get_game_running(self) -> bool:
+    @property
+    def game_running(self) -> bool:
         return self._game_running
 
     def quit_game(self):

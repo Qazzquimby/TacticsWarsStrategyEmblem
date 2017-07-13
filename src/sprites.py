@@ -1,5 +1,5 @@
 import pygame
-
+import typing
 import point
 import size_constants
 
@@ -7,9 +7,10 @@ import size_constants
 class SpriteAnimation(object):
     def __init__(self, sprite_location: str, file_name: str):
         self.sprite_sheet = SpriteSheet(sprite_location, file_name)
-        self.sprite_list = self.sprite_sheet.get_sprite_list()  # type: list
+        self.sprite_list = self.sprite_sheet.sprite_list  # type: list
 
-    def get_sprite(self) -> pygame.Surface:
+    @property
+    def sprite(self) -> pygame.Surface:
         return self.sprite_list[0]  # todo add animation
 
 
@@ -19,10 +20,11 @@ class SpriteSheet(object):
         self.sheet_tile_width = self._get_tile_width()  # type: int
         self.sheet_tile_height = self._get_tile_height()  # type: int
         self._trim_sprite_sheet()
-        self.sprite_list = self._make_sprite_list()  # type: list
+        self._sprite_list = self._make_sprite_list()  # type: typing.List[pygame.Surface]
 
-    def get_sprite_list(self) -> list:
-        return self.sprite_list
+    @property
+    def sprite_list(self) -> typing.List[pygame.Surface]:
+        return self._sprite_list
 
     def _load_sprite_sheet(self, sprite_location: str, file_name: str):
         converted_file_name = "../" + sprite_location + file_name + ".png"
@@ -85,8 +87,8 @@ class SpriteSheet(object):
                     break
         return is_empty
 
-    def _is_pixel_empty(self, point: point.PixelPoint) -> bool:
-        sprite_color = self.surface.get_at((point.x, point.y))
+    def _is_pixel_empty(self, pixel_point: point.PixelPoint) -> bool:
+        sprite_color = self.surface.get_at((pixel_point.x, pixel_point.y))
         is_empty = sprite_color == (255, 255, 255)
         return is_empty
 

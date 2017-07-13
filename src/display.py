@@ -34,11 +34,10 @@ class Display(object):
         """Updates only the area signified by the rect_list"""
         pygame.display.update(rect_list)
 
-    def get_display(self):
+    @property
+    def display(self) -> pygame.display:
         return self._display
 
     def blit(self, surface: pygame.Surface, dest_point: Point):
         dest = (dest_point.x, dest_point.y)
         self._surface.blit(surface, dest)
-
-

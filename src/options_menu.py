@@ -236,9 +236,9 @@ class cOptionsMenu:
         # highlight the
         # image buttons (not the text buttons)
         for button in self.menu_items:
-            if button['b_image'] != None:
-                button['rect'][2] = button['rect'][2] - 2*old_th + 2*new_thick
-                button['rect'][3] = button['rect'][3] - 2*old_th + 2*new_thick
+            if button['b_image'] is not None:
+                button['rect'][2] = button['rect'][2] - 2 * old_th + 2 * new_thick
+                button['rect'][3] = button['rect'][3] - 2 * old_th + 2 * new_thick
         self.image_highlight_offset = new_thick
         self.update_buttons = True
 
@@ -258,7 +258,7 @@ class cOptionsMenu:
         else:
             print
             'WARNING:  cMenu.set_orientation:  Invalid argument ' \
-            'new_orientation (value: %d)'%new_orientation
+            'new_orientation (value: %d)' % new_orientation
 
     ## ---[ set_change_number
     # ]--------------------------------------------------
@@ -279,7 +279,7 @@ class cOptionsMenu:
         # We need to execute_tick the width and height of the text buttons since we
         # calculated their width and height based on the font
         for button in self.menu_items:
-            if button['b_image'] == None:
+            if button['b_image'] is None:
                 width, height = self.font.size(button['text'])
                 button['rect'][2] = width
                 button['rect'][3] = height
@@ -375,7 +375,6 @@ class cOptionsMenu:
         for index in indexList:
             # if len(self.menu_items) > 1: #Original, always leaves one
             if len(self.menu_items) > 0:
-
                 self.menu_items.pop(index)
         self.update_buttons = True
         return old_contained_rect
@@ -402,7 +401,7 @@ class cOptionsMenu:
     #  Create the button dictionary for a new button.  Note that this button is
     #  useless until the set_button_images method is called which is where the
     #  button images are created and assigned.  The reason it is not done here
-    #  is becuase we need to know the location of the button on the background
+    #  is because we need to know the location of the button on the background
     #  which is not assigned until position_buttons() is called.  Since position
     #  buttons depends on the width and height of each button, we just calculate
     #  those here, then we set the location of the buttons via the
@@ -412,7 +411,7 @@ class cOptionsMenu:
     def create_button(self, button_info):
         # If this button is not an image, set the width and height based on the
         # text
-        if button_info[2] == None:
+        if button_info[2] is None:
             width, height = self.font.size(button_info[0])
             button_rect = pygame.Rect((0, 0), (width, height))
         # Else this button is a graphic button, so create the width and height
@@ -420,8 +419,8 @@ class cOptionsMenu:
         else:
             width, height = button_info[2].get_size()
             offset = (self.image_highlight_offset, self.image_highlight_offset)
-            new_width = width + 2*offset[0]  # Make room for the highlight on
-            new_height = height + 2*offset[1]  # all sides
+            new_width = width + 2 * offset[0]  # Make room for the highlight on
+            new_height = height + 2 * offset[1]  # all sides
             button_rect = pygame.Rect((0, 0), (new_width, new_height))
 
         set_redraw = True  # When the button is created, it needs to be drawn
@@ -453,7 +452,7 @@ class cOptionsMenu:
         for button in self.menu_items:
             # If this button is not an image, create the selected and unselected
             # images based on the text
-            if button['b_image'] == None:
+            if button['b_image'] is None:
                 r = self.font.render
                 width = button['rect'][2]
                 height = button['rect'][3]
@@ -545,7 +544,7 @@ class cOptionsMenu:
             if self.alignment['vertical'] == 'top':
                 offset_height = 0
             elif self.alignment['vertical'] == 'center':
-                offset_height = (max_height - button['rect'][3])/2
+                offset_height = (max_height - button['rect'][3]) / 2
             elif self.alignment['vertical'] == 'bottom':
                 offset_height = (max_height - button['rect'][3])
             else:
@@ -560,7 +559,7 @@ class cOptionsMenu:
             if self.alignment['horizontal'] == 'left':
                 offset_width = 0
             elif self.alignment['horizontal'] == 'center':
-                offset_width = (max_width - button['rect'][2])/2
+                offset_width = (max_width - button['rect'][2]) / 2
             elif self.alignment['horizontal'] == 'right':
                 offset_width = (max_width - button['rect'][2])
             else:
@@ -628,16 +627,16 @@ class cOptionsMenu:
         # We shift the buttons around on the screen if they are supposed to be
         # centered (on the surface itself or at (x, y).  We do it here
         # instead of
-        # at the beginning of this function becuase we need to know what the
+        # at the beginning of this function because we need to know what the
         # self.contained_rect is to know the correct amount to shift them.
         if self.centeredOnScreen:
             shift_x = self.x - (self.draw_surface.get_rect()[2] -
-                                self.contained_rect[2])/2
+                                self.contained_rect[2]) / 2
             shift_y = self.y - (self.draw_surface.get_rect()[3] -
-                                self.contained_rect[3])/2
+                                self.contained_rect[3]) / 2
         elif self.centered:
-            shift_x = (self.contained_rect[2])/2
-            shift_y = (self.contained_rect[3])/2
+            shift_x = (self.contained_rect[2]) / 2
+            shift_y = (self.contained_rect[3]) / 2
         if self.centeredOnScreen or self.centered:
             # Move the buttons to make them centered
             for button in self.menu_items:
@@ -744,7 +743,7 @@ class cOptionsMenu:
         # If a rect was provided, redraw the background surface to the area
         # of the
         # rect before we draw the buttons
-        if redraw_rect != None:
+        if redraw_rect is not None:
             offset = (redraw_rect[0], redraw_rect[1])
             drawn_rect = self.draw_surface.blit(self.background,
                                                 offset,
@@ -775,11 +774,11 @@ class cOptionsMenu:
 
     def select_up(self):
         """Moves to the selection one higher, or loops to the bottom"""
-        self.update((self.selection - 1)%len(self.menu_items))
+        self.update((self.selection - 1) % len(self.menu_items))
 
     def select_down(self):
         """Moves to the selection one lower, or loops to the top"""
-        self.update((self.selection + 1)%len(self.menu_items))
+        self.update((self.selection + 1) % len(self.menu_items))
 
 # ---[ END OF FILE
 # ]-------------------------------------------------------------

@@ -1,4 +1,3 @@
-import typing
 import xml.etree.ElementTree as ElementTree
 
 import entities
@@ -7,8 +6,9 @@ import sprites
 from point import Location
 import typing
 import terrain
-import army
 import ironlegion
+from world_setup import WorldSetup
+
 
 class MapAndUI(object):
     def __init__(self, world_setup):
@@ -18,21 +18,21 @@ class MapAndUI(object):
 
 
 class Tile(object):
-    def __init__(self, terrain: terrain.Terrain,
+    def __init__(self, tile_terrain: terrain.Terrain,
                  building: typing.Union[entities.Building, entities.NullEntity],
                  unit: typing.Union[entities.Unit, entities.NullEntity]):
-        self.terrain = terrain
+        self.terrain = tile_terrain
         self.building = building
         self.unit = unit
 
 
 class Map(object):
-    def __init__(self, world_setup):
+    def __init__(self, world_setup: WorldSetup):
         self.world_setup = world_setup
         self._map = []
-        self._init_map(self.world_setup.get_map_path())
+        self._init_map(self.world_setup.map_path)
 
-    def get_entities(self, layer: typing.Type[layers.Layer], location: Location):
+    def get_entities(self, layer: typing.Type[layers.Layer], location: Location) -> entities.Entity:
         if layer == layers.TerrainLayer:
             return self.get_terrain(location)
         elif layer == layers.BuildingLayer:
@@ -60,15 +60,15 @@ class Map(object):
     def get_tile(self, location: Location) -> Tile:
         return self._map[location.x][location.y]
 
-    def get_width(self):
+    @property
+    def width(self) -> int:
         return len(self._map)
 
-    def get_height(self):
+    @property
+    def height(self) -> int:
         return len(self._map[0])
 
-    def _init_map(self, map_filename):
-        CHARACTERS_PER_NAME = 6
-
+    def _init_map(self, map_filename: str):
         def parse_map_file(map_filename):
             map_xml = ElementTree.parse(map_filename)
             root = map_xml.getroot()
@@ -81,8 +81,8 @@ class Map(object):
             for tile in column_xml:
                 tile_terrain = terrain.Grass()
                 tile_building = ironlegion.HQ(self.world_setup._players[0],
-                                             self.world_setup._players[
-                    0].get_army()) #fixme use the xml ???
+                                              self.world_setup._players[
+                                                  0].army)  # fixme use the xml ???
                 tile_unit = entities.NullEntity()
                 new_tile = Tile(tile_terrain, tile_building, tile_unit)
                 column_list.append(new_tile)

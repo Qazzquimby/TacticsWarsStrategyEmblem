@@ -16,16 +16,8 @@ class StateEngine(object):
 
         self.push_screen(self.main_game_screen)
 
-    def setup_initial_screen(self):
-
-        world_setup = WorldSetup()
-
-        # fixme mockup
-        world_setup.add_player(ironlegion.IronLegion())
-
-        return world_screen.MainGameScreen(self.display, self.session, world_setup)
-
-    def get_screen(self) -> GameScreen:
+    @property
+    def screen(self) -> GameScreen:
         if len(self._screen_stack) < 1:
             self.setup_initial_screen()
             self.quit_game()
@@ -43,11 +35,20 @@ class StateEngine(object):
 
     def receive_input(self, current_input: user_input.Input):
         if current_input:
-            self.get_screen().receive_input(current_input)
+            self.screen.receive_input(current_input)
 
     def execute_tick(self, current_input: user_input.Input):
         self.receive_input(current_input)
-        self.get_screen().execute_tick()
+        self.screen.execute_tick()
+
+    def setup_initial_screen(self):
+
+        world_setup = WorldSetup()
+
+        # fixme mockup
+        world_setup.add_player(ironlegion.IronLegion())
+
+        return world_screen.MainGameScreen(self.display, self.session, world_setup)
 
     def quit_game(self):
         self.session.quit_game()

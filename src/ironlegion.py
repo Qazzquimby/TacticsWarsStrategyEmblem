@@ -1,6 +1,7 @@
 from army import Army
 import entities
 
+
 class IronLegion(Army):
     _name = "Iron Legion"
     _code_name = "iron_legion"

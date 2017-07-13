@@ -47,9 +47,9 @@ class InputInterpreter(object):
         for event in pygame.event.get():
             curr_input = None
             if event.type == pygame.KEYDOWN:
-                curr_input = self.control_map.get_input((pygame.key.name(event.key), KEY_DOWN))
+                curr_input = self.control_map.key_to_input((pygame.key.name(event.key), KEY_DOWN))
             elif event.type == pygame.KEYUP:
-                curr_input = self.control_map.get_input((pygame.key.name(event.key), KEY_UP))
+                curr_input = self.control_map.key_to_input((pygame.key.name(event.key), KEY_UP))
 
             if callable(curr_input):
                 inputs.append(curr_input())
@@ -72,7 +72,7 @@ class ControlMap(object):
             ("down", True): Down,
         }
 
-    def get_input(self, key: (str, int)) -> typing.Optional[typing.Type[Input]]:
+    def key_to_input(self, key: (str, int)) -> typing.Optional[typing.Type[Input]]:
         """Returns the Input mapped to the keypress"""
         try:
             return self._input_dict[key]

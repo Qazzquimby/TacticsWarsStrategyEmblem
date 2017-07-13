@@ -2,7 +2,6 @@ import screen
 import world_drawing
 import world_screen_content
 import user_input
-import pygame
 
 
 class MainGameScreen(screen.GameScreen):
@@ -16,5 +15,5 @@ class MainGameScreen(screen.GameScreen):
         #  Game logic goes here
         self.animation.execute_tick()
 
-    def receive_input(self, curr_input: user_input.Input):
+    def _receive_input(self, curr_input: user_input.Input):
         pass

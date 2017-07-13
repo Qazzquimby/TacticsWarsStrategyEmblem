@@ -22,8 +22,7 @@ class ConnectionScreen(src.screen.GameScreen):
 
         def local_hotseat(curr_input):
             if isinstance(curr_input, src.user_input.Confirm):
-                self.session.connection_mode = \
-                    self.session.connection_modes.HOTSEAT
+                self.session.connection_mode = self.session.connection_modes.HOTSEAT
             elif isinstance(curr_input, src.user_input.Up):
                 self.menu.select_up()
             elif isinstance(curr_input, src.user_input.Down):
@@ -62,8 +61,11 @@ class ConnectionScreen(src.screen.GameScreen):
 
         self.menu = ConnectionMenu()
 
+    def execute_tick(self):
+        raise NotImplementedError
+
     def update(self, clock):
-        self.menu.update(self.display.get_display(), clock)
+        self.menu.update(self.display.display, clock)
         # TODO in GameScreen define a type for Actions, so that they can be
         # remembered
         #  and undone

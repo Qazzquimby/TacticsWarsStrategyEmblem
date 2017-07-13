@@ -8,13 +8,16 @@ class Player(object):
         self._color = self._init_color()  # type: colors.ArmyColor
         self._army = army  # type: Army
 
-    def get_color(self) -> colors.ArmyColor:
+    @property
+    def color(self) -> colors.ArmyColor:
         return self._color
 
-    def get_color_name(self) -> str:
+    @property
+    def color_name(self) -> str:
         return self._color.name
 
-    def get_army(self) -> Army:
+    @property
+    def army(self) -> Army:
         return self._army
 
     def _init_color(self):

@@ -25,7 +25,7 @@ class Main(object):
         self.uninit()
 
     def game_loop(self):
-        while self.session.get_game_running():
+        while self.session.game_running:
             self.execute_tick()
 
     def execute_tick(self):
