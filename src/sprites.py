@@ -1,7 +1,8 @@
 import pygame
 import typing
+
+import graphics
 import point
-import size_constants
 
 
 class SpriteAnimation(object):
@@ -32,19 +33,19 @@ class SpriteSheet(object):
 
     def _get_tile_height(self) -> int:
         pixel_height = self.surface.get_height()
-        tile_height = int(pixel_height / size_constants.TILE_SIZE)
+        tile_height = int(pixel_height / graphics.TILE_SIZE)
         return tile_height
 
     def _get_tile_width(self) -> int:
         pixel_width = self.surface.get_width()
-        tile_width = int(pixel_width / size_constants.TILE_SIZE)
+        tile_width = int(pixel_width / graphics.TILE_SIZE)
         return tile_width
 
     def _trim_sprite_sheet(self):
         self._trim_width()
         self._trim_height()
-        new_sheet = pygame.Surface((self.sheet_tile_width * size_constants.TILE_SIZE,
-                                    self.sheet_tile_height * size_constants.TILE_SIZE))
+        new_sheet = pygame.Surface((self.sheet_tile_width * graphics.TILE_SIZE,
+                                    self.sheet_tile_height * graphics.TILE_SIZE))
         new_sheet.blit(self.surface, (0, 0))
         self.surface = new_sheet
 
@@ -78,10 +79,10 @@ class SpriteSheet(object):
 
     def _is_tile_empty(self, tile_x: int, tile_y: int) -> bool:
         is_empty = True
-        for pixel_y in range(size_constants.TILE_SIZE):
-            for pixel_x in range(size_constants.TILE_SIZE):
-                screen_pixel = point.PixelPoint(tile_x * size_constants.TILE_SIZE + pixel_x,
-                                                tile_y * size_constants.TILE_SIZE + pixel_y)
+        for pixel_y in range(graphics.TILE_SIZE):
+            for pixel_x in range(graphics.TILE_SIZE):
+                screen_pixel = point.PixelPoint(tile_x * graphics.TILE_SIZE + pixel_x,
+                                                tile_y * graphics.TILE_SIZE + pixel_y)
                 if not self._is_pixel_empty(screen_pixel):
                     is_empty = False
                     break
@@ -95,13 +96,16 @@ class SpriteSheet(object):
     def _make_sprite_list(self):
         sprite_list = []
         for tile_x in range(self.sheet_tile_width):
-            sprite = pygame.Surface((size_constants.TILE_SIZE, size_constants.TILE_SIZE))
-            rect_of_sheet = pygame.Rect((tile_x * size_constants.TILE_SIZE, 0),
-                                        (size_constants.TILE_SIZE, size_constants.TILE_SIZE))
+            sprite = pygame.Surface((graphics.TILE_SIZE, graphics.TILE_SIZE))
+            rect_of_sheet = pygame.Rect((tile_x * graphics.TILE_SIZE, 0),
+                                        (graphics.TILE_SIZE, graphics.TILE_SIZE))
             sprite.blit(self.surface, (0, 0), rect_of_sheet)
             sprite_list.append(sprite)
         return sprite_list
 
 
 class MissingSpriteException(Exception):
+    pass
+
+class DrawNullEntityException(Exception):
     pass

@@ -3,10 +3,11 @@ import abc
 
 import pygame_toolbox.graphics
 
+import graphics
 import src.colors
 import src.user_input
 import src.session
-import src.screen
+import src.screens
 
 
 class MenuState(abc.ABC):
@@ -14,10 +15,10 @@ class MenuState(abc.ABC):
         pass
 
 
-class ConnectionScreen(src.screen.GameScreen):
+class ConnectionScreen(state_engine.GameScreen):
     def __init__(self, display, session):
 
-        src.screen.GameScreen.__init__(self, display, session)
+        state_engine.GameScreen.__init__(self, display, session)
         self.name = "Connection Screen"
 
         def local_hotseat(curr_input):
@@ -55,7 +56,7 @@ class ConnectionScreen(src.screen.GameScreen):
                 pygame_toolbox.graphics.Menu.__init__(
                     self,
                     size,
-                    src.colors.BLACK,
+                    display.BLACK,
                     header,
                     buttons)
 

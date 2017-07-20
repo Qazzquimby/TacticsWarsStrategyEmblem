@@ -1,88 +1,93 @@
 <?xml version="1.0"?>
 <data>
     <column>
-        <space>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+            <building>
+                <army>iron_legion</army>
+                <name>hq</name>
+                <player>0</player>
+            </building>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
+        </tile>
     </column>
     <column>
-        <space>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
+        </tile>
     </column>
     <column>
-        <space>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
+        </tile>
     </column>
     <column>
-        <space>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
+        </tile>
     </column>
     <column>
-        <space>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
-        <space>
+        </tile>
+        <tile>
             <terrain>grass</terrain>
-        </space>
+        </tile>
     </column>
 </data>

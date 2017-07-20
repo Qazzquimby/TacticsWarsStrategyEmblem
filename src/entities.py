@@ -1,9 +1,13 @@
 import abc
-import colors
-import sprites
+
 import pygame
+from yapsy.IPlugin import IPlugin
+
+import colors
+from classproperty import classproperty
+import sprites
+from importer import Importer
 from player import Player
-from army import Army
 
 
 class Entity(abc.ABC):
@@ -15,11 +19,11 @@ class Entity(abc.ABC):
     def __init__(self):
         self._initialize_class_if_uninitialized()
 
-    @property
+    @classproperty
     def name(self) -> str:
         return self._name
 
-    @property
+    @classproperty
     def code_name(self) -> str:
         return self._code_name
 
@@ -60,27 +64,27 @@ class UnownedEntity(Entity, abc.ABC):
 
 
 class OwnedEntity(Entity, abc.ABC):
-    _army = NotImplemented  # type: Army
+    _army = NotImplemented  # type: armymod.Army
     _sprite_location_type = NotImplemented  # type: str
     _sprite_location = NotImplemented  # type: str
     _animation_red = NotImplemented  # type: sprites.SpriteAnimation
     _animation_blue = NotImplemented  # type: sprites.SpriteAnimation
 
-    def __init__(self, player: Player, army: Army):
+    def __init__(self, player: Player):
         self.player = player
-        self._army = army
         Entity.__init__(self)
 
     def _initialize_class(self):
         self._army = self.army
 
-        self._sprite_location = "armies/" + self.army.code_name + "/sprites" + \
+        self._sprite_location = "armies/" + self.army().code_name + "/sprites" + \
                                 self._sprite_location_type
 
-        self.__class__._animation_red = sprites.SpriteAnimation(self.sprite_location,
-                                                                self.code_name)
-        self.__class__._animation_blue = sprites.SpriteAnimation(self.sprite_location,
-                                                                 self.code_name)
+        self._animation_red = sprites.SpriteAnimation(self.sprite_location,
+                                                      self.code_name)
+        self._animation_blue = sprites.SpriteAnimation(self.sprite_location,
+                                                       self.code_name)
+        self._army().add_entity(self.__class__)
 
     @property
     def animation(self):
@@ -100,15 +104,15 @@ class OwnedEntity(Entity, abc.ABC):
 class Building(OwnedEntity):
     _sprite_location_type = "/buildings/"
 
-    def __init__(self, player: Player, army: Army):
-        OwnedEntity.__init__(self, player, army)
+    def __init__(self, player: Player):
+        OwnedEntity.__init__(self, player)
 
 
 class Unit(OwnedEntity):
     _sprite_location_type = "/units/"
 
-    def __init__(self, player: Player, army: Army):
-        OwnedEntity.__init__(self, player, army)
+    def __init__(self, player: Player):
+        OwnedEntity.__init__(self, player)
 
 
 class NullEntity(Entity):
@@ -120,7 +124,37 @@ class NullEntity(Entity):
 
     @property
     def animation(self) -> sprites.SpriteAnimation:
-        return None  # fixme null animation with no sprites?
+        raise sprites.DrawNullEntityException()  # fixme null animation with no sprites?
 
     def _initialize_class(self):
         pass
+
+
+class Terrain(UnownedEntity):
+    _sprite_location = "sprites/terrain/"
+    _defense = NotImplemented  # type: int
+
+    def __init__(self):
+        UnownedEntity.__init__(self)
+
+
+class EntityPlugin(IPlugin):
+    pass
+
+
+class EntityImporter(Importer):
+    def __init__(self):
+        Importer.__init__(self, ["../armies"], EntityPlugin)
+
+
+class Grass(Terrain):
+    _name = "Grass"
+    _code_name = "grass"
+    _defense = 1
+    _initialized = False
+
+    def __init__(self):
+        Terrain.__init__(self)
+
+
+terrain_list = [Grass]

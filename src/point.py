@@ -1,4 +1,4 @@
-import size_constants
+import graphics
 
 
 class Point(object):
@@ -17,11 +17,11 @@ class PixelPoint(Point):
         Point.__init__(self, x, y)
 
     def to_tile_point(self) -> "TilePoint":
-        if self.x % size_constants.TILE_SIZE != 0 or self.y % size_constants.TILE_SIZE != 0:
+        if self.x % graphics.TILE_SIZE != 0 or self.y % graphics.TILE_SIZE != 0:
             raise ValueError("pixel point is on the tile grid")
         else:
-            return TilePoint(int(self.x / size_constants.TILE_SIZE),
-                             int(self.y / size_constants.TILE_SIZE))
+            return TilePoint(int(self.x / graphics.TILE_SIZE),
+                             int(self.y / graphics.TILE_SIZE))
 
 
 class TilePoint(Point):
@@ -29,5 +29,5 @@ class TilePoint(Point):
         Point.__init__(self, x, y)
 
     def to_pixel_point(self) -> PixelPoint:
-        return PixelPoint(self.x * size_constants.TILE_SIZE,
-                          self.y * size_constants.TILE_SIZE)
+        return PixelPoint(self.x * graphics.TILE_SIZE,
+                          self.y * graphics.TILE_SIZE)

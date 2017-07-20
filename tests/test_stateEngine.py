@@ -1,15 +1,15 @@
 from unittest import TestCase
 
-import display
+import graphics
 import session
 import state_engine
 
 
 class TestStateEngine(TestCase):
     def setUp(self):
-        self.display = display.Display()
+        self.display = graphics.Display()
         self.session = session.Session()
-        self.state_engine = state_engine.StateEngine(display, session)
+        self.state_engine = state_engine.StateEngine(graphics, session)
 
     def test_setup_initial_screen(self):
         self.state_engine.setup_initial_screen()

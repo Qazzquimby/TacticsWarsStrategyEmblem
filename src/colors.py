@@ -1,6 +1,3 @@
-BLACK = (0, 0, 0)
-
-
 class ArmyColor(object):
     name = NotImplemented
 

@@ -1,25 +1,41 @@
-import world_screen
-from screen import GameScreen
-from world_setup import WorldSetup
+import abc
+
 import user_input
-import ironlegion
-from display import Display
+from graphics import Display
 from session import Session
 
 
-class StateEngine(object):
-    def __init__(self, display, session):
+class GameScreen(abc.ABC):
+    def __init__(self, display: Display, session: Session):
+        self.display = display  # type: Display
+        self.session = session  # type: Session
+        self.name = None  # type: str
+        self.content = None
+
+    def receive_input(self, curr_input: user_input.Input):
+        print("Sending {} to {}".format(curr_input.name, self.name))
+        self._receive_input(curr_input)
+
+    def execute_tick(self):
+        raise NotImplementedError
+
+    def _receive_input(self, curr_input: user_input.Input):
+        raise NotImplementedError
+
+
+class ScreenEngine(object):
+    def __init__(self, display, session, initial_screen):
         self._screen_stack = []
         self.display = display  # type: Display
         self.session = session  # type: Session
-        self.main_game_screen = self.setup_initial_screen()  # type: GameScreen
+        self.main_game_screen = initial_screen  # type: GameScreen
 
         self.push_screen(self.main_game_screen)
 
     @property
     def screen(self) -> GameScreen:
         if len(self._screen_stack) < 1:
-            self.setup_initial_screen()
+            self.push_screen(self.main_game_screen)
             self.quit_game()
         return self._screen_stack[len(self._screen_stack) - 1]
 
@@ -40,15 +56,6 @@ class StateEngine(object):
     def execute_tick(self, current_input: user_input.Input):
         self.receive_input(current_input)
         self.screen.execute_tick()
-
-    def setup_initial_screen(self):
-
-        world_setup = WorldSetup()
-
-        # fixme mockup
-        world_setup.add_player(ironlegion.IronLegion())
-
-        return world_screen.MainGameScreen(self.display, self.session, world_setup)
 
     def quit_game(self):
         self.session.quit_game()
