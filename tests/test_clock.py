@@ -1,5 +1,5 @@
 from unittest import TestCase
-import screen
+
 
 class TestClock(TestCase):
     def setUp(self):

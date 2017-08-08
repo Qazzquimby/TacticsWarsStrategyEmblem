@@ -10,7 +10,7 @@ class GameScreen(abc.ABC):
         self.display = display  # type: Display
         self.session = session  # type: Session
         self.name = None  # type: str
-        self.content = None
+        self.content = NotImplemented
 
     def receive_input(self, curr_input: user_input.Input):
         print("Sending {} to {}".format(curr_input.name, self.name))

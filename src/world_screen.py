@@ -76,7 +76,7 @@ class Tile(object):
 
 class Map(object):
     def __init__(self, world_setup: "WorldSetup"):
-        self.world_setup = world_setup
+        self.world_setup = world_setup  # type: world_setup.WorldSetup
         self._map = []
         self._init_map(self.world_setup.map_path)
 
@@ -129,12 +129,8 @@ class Map(object):
             for tile in column_xml:
                 tile_terrain = _xml_to_tile_element(TerrainLayer, tile)
                 tile_building = _xml_to_tile_element(BuildingLayer, tile)
-                # building_xml = _get_xml_tile_element(tile, BuildingLayer)
-                # unit_xml = _get_xml_tile_element(tile, UnitLayer)
+                tile_unit = _xml_to_tile_element(UnitLayer, tile)
 
-                # tile_terrain = entities.Grass()
-                # tile_building = entities.NullEntity()
-                tile_unit = entities.NullEntity()
                 new_tile = Tile(tile_terrain, tile_building, tile_unit)
                 column_list.append(new_tile)
             return column_list
@@ -143,12 +139,13 @@ class Map(object):
                 typing.Union[entities.Terrain, entities.Building, entities.Unit]:
 
             str_army, str_element, player = _xml_element_to_dict_keys(layer, tile)
+            player = int(player)
             tile_element = self.access_entity_dict(layer, str_army, str_element)
             if player == -1:
-                tile_element_instance = tile_element() #no player
+                tile_element_instance = tile_element()  # no player
             else:
-                tile_element_instance = tile_element(self.world_setup.players[0]) #fixme, make player
-            #  choice dynamic from map xml
+                tile_element_instance = tile_element(self.world_setup.players[player])
+            # choice dynamic from map xml
             return tile_element_instance
 
         def _xml_element_to_dict_keys(layer: typing.Type[Layer], tile: ElementTree.Element) -> \
@@ -216,7 +213,7 @@ class MapDrawing(object):
     def draw_map(self):
         self.draw_map_layer(TerrainLayer)
         self.draw_map_layer(BuildingLayer)
-        # todo other layers
+        self.draw_map_layer(UnitLayer)
 
     def draw_map_layer(self, layer: typing.Type[Layer]):
         for y in range(self.map.width):

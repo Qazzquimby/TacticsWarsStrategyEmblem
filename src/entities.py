@@ -4,10 +4,10 @@ import pygame
 from yapsy.IPlugin import IPlugin
 
 import colors
-from classproperty import classproperty
 import sprites
+from classproperty import classproperty
 from importer import Importer
-from player import Player
+import players
 
 
 class Entity(abc.ABC):
@@ -70,7 +70,7 @@ class OwnedEntity(Entity, abc.ABC):
     _animation_red = NotImplemented  # type: sprites.SpriteAnimation
     _animation_blue = NotImplemented  # type: sprites.SpriteAnimation
 
-    def __init__(self, player: Player):
+    def __init__(self, player: players.Player):
         self.player = player
         Entity.__init__(self)
 
@@ -104,14 +104,14 @@ class OwnedEntity(Entity, abc.ABC):
 class Building(OwnedEntity):
     _sprite_location_type = "/buildings/"
 
-    def __init__(self, player: Player):
+    def __init__(self, player: players.Player):
         OwnedEntity.__init__(self, player)
 
 
 class Unit(OwnedEntity):
     _sprite_location_type = "/units/"
 
-    def __init__(self, player: Player):
+    def __init__(self, player: players.Player):
         OwnedEntity.__init__(self, player)
 
 
@@ -124,7 +124,7 @@ class NullEntity(Entity):
 
     @property
     def animation(self) -> sprites.SpriteAnimation:
-        raise sprites.DrawNullEntityException()  # fixme null animation with no sprites?
+        raise sprites.DrawNullEntityException()
 
     def _initialize_class(self):
         pass

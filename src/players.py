@@ -3,7 +3,7 @@ import colors
 
 
 class Player(object):
-    def __init__(self, player_number: int, army: armymod.Army):
+    def __init__(self, player_number: int, army: "armymod.Army"):
         self.player_number = player_number  # type: int
         self._color = self._init_color()  # type: colors.ArmyColor
         self._army = army  # type: armymod.Army
@@ -17,7 +17,7 @@ class Player(object):
         return self._color.name
 
     @property
-    def army(self) -> armymod.Army:
+    def army(self) -> "armymod.Army":
         return self._army
 
     def _init_color(self):

@@ -1,12 +1,14 @@
-import entities
-import player
+import typing
+
 import armymod
+import entities
+import players
 import world_screen
 
 
 class WorldSetup(object):
     def __init__(self):
-        self._players = []
+        self._players = []  #type: typing.List[players.Player]
         self._map_path = "../maps/map_filename.xml"
         self.armies = armymod.ArmyImporter()
         self.entity_dict = self._initialize_entity_dict()
@@ -21,7 +23,7 @@ class WorldSetup(object):
 
     def add_player(self, army: armymod.Army):
         new_player_number = len(self._players)
-        new_player = player.Player(new_player_number, army)
+        new_player = players.Player(new_player_number, army)
         self._players.append(new_player)
 
         # todo current player

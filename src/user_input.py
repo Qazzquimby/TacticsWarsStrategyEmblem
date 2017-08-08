@@ -1,6 +1,7 @@
-import pygame
 import abc
 import typing
+
+import pygame
 
 """Classes related to receiving and interpreting user input"""
 

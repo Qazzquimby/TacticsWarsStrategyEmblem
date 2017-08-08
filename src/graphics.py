@@ -1,5 +1,6 @@
 # import win32api
 import pygame
+
 from point import Point
 
 
@@ -36,6 +37,11 @@ class Display(object):
     def display(self) -> pygame.display:
         return self._display
 
+    @property
+    def surface(self) -> pygame.Surface:
+        return self._surface
+
+
     def blit(self, surface: pygame.Surface, dest_point: Point):
         dest = (dest_point.x, dest_point.y)
         self._surface.blit(surface, dest)
@@ -55,3 +61,5 @@ MAP_HEIGHT = TILE_SIZE * MAP_TILE_HEIGHT
 MAP_TILE_WIDTH = SCREEN_TILE_WIDTH
 MAP_WIDTH = TILE_SIZE * MAP_TILE_WIDTH
 BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)

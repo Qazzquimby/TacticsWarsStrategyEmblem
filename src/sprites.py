@@ -1,5 +1,6 @@
-import pygame
 import typing
+
+import pygame
 
 import graphics
 import point

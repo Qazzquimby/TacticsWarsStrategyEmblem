@@ -1,15 +1,16 @@
 import sys
+
 import pygame
 
 import graphics
+import menus
 import screens
-import user_input
 import session
+import user_input
 
-#fixme patching over missing army select
-from world_setup import WorldSetup
-import world_screen
-import armymod
+
+# fixme patching over missing army select
+
 
 class Clock(object):
     def __init__(self):
@@ -17,7 +18,12 @@ class Clock(object):
         self.pygame_clock = pygame.time.Clock()
 
     def wait_for_next_tick(self):
-        self.pygame_clock.tick()
+        self.pygame_clock.tick(self.ms_per_frame)
+
+
+    @property
+    def ms_per_frame(self):
+        return int(1000 / self.FPS)
 
 
 class Main(object):
@@ -27,11 +33,10 @@ class Main(object):
 
         self.session = session.Session()  # type: session.Session
         self.display = graphics.Display()  # type: graphics.Display
-        self.state_engine = screens.ScreenEngine(self.display,
-                                                 self.session,
-                                                 self.setup_initial_screen())  # type:
-        # screens.ScreenEngine
-        self.clock = Clock()  # type: import main
+        self.state_engine = screens.ScreenEngine(
+            self.display, self.session, self.setup_initial_screen())  # type:screens.ScreenEngine
+
+        self.clock = Clock()
 
         self.input_interpreter = user_input.InputInterpreter()  # type: user_input.InputInterpreter
 
@@ -49,15 +54,14 @@ class Main(object):
         self.clock.wait_for_next_tick()
 
     def setup_initial_screen(self):
-        world_setup = WorldSetup()
-
         # fixme mockup
-        army_importer = armymod.ArmyImporter()
-        army_importer.print_plugins()
+        # world_setup = WorldSetup()
+        # army_importer = armymod.ArmyImporter()
         # world_setup.add_player(IronLegion())
-        world_setup.add_player(army_importer.plugins[0])
+        # world_setup.add_player(army_importer.plugins[0])
+        # return world_screen.MainGameScreen(self.display, self.session, world_setup)
 
-        return world_screen.MainGameScreen(self.display, self.session, world_setup)
+        return menus.ConnectionScreen(self.display, self.session)
 
     def uninit(self):
         self.quit_game()
@@ -69,5 +73,3 @@ class Main(object):
 
 if __name__ == "__main__":
     main = Main()
-
-

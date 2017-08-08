@@ -1,8 +1,9 @@
 from unittest import TestCase
 
+import state_engine
+
 import graphics
 import session
-import state_engine
 
 
 class TestStateEngine(TestCase):
