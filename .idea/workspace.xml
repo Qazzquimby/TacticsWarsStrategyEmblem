@@ -5,20 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="720812d0-50dc-4d5c-bcee-ad184f39bae6" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/options_menu.py" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/player.py" afterPath="$PROJECT_DIR$/src/players.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/entities.py" afterPath="$PROJECT_DIR$/src/entities.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/graphics.py" afterPath="$PROJECT_DIR$/src/graphics.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.py" afterPath="$PROJECT_DIR$/src/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/menus.py" afterPath="$PROJECT_DIR$/src/menus.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/screens.py" afterPath="$PROJECT_DIR$/src/screens.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/sprites.py" afterPath="$PROJECT_DIR$/src/sprites.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/user_input.py" afterPath="$PROJECT_DIR$/src/user_input.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/world_screen.py" afterPath="$PROJECT_DIR$/src/world_screen.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/world_setup.py" afterPath="$PROJECT_DIR$/src/world_setup.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_clock.py" afterPath="$PROJECT_DIR$/tests/test_clock.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/test_stateEngine.py" afterPath="$PROJECT_DIR$/tests/test_stateEngine.py" />
     </list>
     <ignored path="TacticsWarsStrategyEmblem.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -730,7 +717,14 @@
       <option name="project" value="LOCAL" />
       <updated>1500585891784</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Working menu screen, including functionality for selection buttons that change with the left and right keys.">
+      <created>1502178077569</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1502178077569</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -820,7 +814,8 @@
     <MESSAGE value="Added many type hints.&#10;Moved iron_legion to its own file." />
     <MESSAGE value="getters converted to properties. Most warnings fixed." />
     <MESSAGE value="Now draws layers from the map. Todo add unit layer.&#10;Armies now contain a list of buildings and units they control, populated by the buildings and units initialization.&#10;Map file now lists the army, name, and player of each entity.&#10;Dynamically imports armies." />
-    <option name="LAST_COMMIT_MESSAGE" value="Now draws layers from the map. Todo add unit layer.&#10;Armies now contain a list of buildings and units they control, populated by the buildings and units initialization.&#10;Map file now lists the army, name, and player of each entity.&#10;Dynamically imports armies." />
+    <MESSAGE value="Working menu screen, including functionality for selection buttons that change with the left and right keys." />
+    <option name="LAST_COMMIT_MESSAGE" value="Working menu screen, including functionality for selection buttons that change with the left and right keys." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
