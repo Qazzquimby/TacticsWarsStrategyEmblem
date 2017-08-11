@@ -1,54 +1,25 @@
-import abc
 import typing
-from xml.etree import ElementTree as ElementTree
 
 import pygame
 
 import entities
 import graphics
+import layers
 import point
 import screens
 import sprites
 import user_input
 from point import Location
-
-
-class Layer(abc.ABC):
-    name = NotImplemented  # type: str
-    priority = NotImplemented  # type: int
-
-
-class TerrainLayer(Layer):
-    name = "terrain"
-    priority = 1
-
-
-class BuildingLayer(Layer):
-    name = "building"
-    priority = 2
-
-
-class UnitLayer(Layer):
-    name = "unit"
-    priority = 3
-
-
-class OverlayLayer(Layer):
-    name = "overlay"
-    priority = 4
-
-
-class CursorLayer(Layer):
-    name = "cursor"
-    priority = 5
+from world_setups import WorldSetup
 
 
 class MainGameScreen(screens.GameScreen):
-    def __init__(self, display, session, world_setup):
-        screens.GameScreen.__init__(self, display, session)
+    def __init__(self, screen_engine, world_setup):
+        screens.GameScreen.__init__(self, screen_engine)
         self.world_setup = world_setup
         self.content = MapAndUI(self.world_setup)
-        self.animation = MapDrawing(self.content, display)
+        self.animation = MapDrawing(self.content, self.display)
+        self.name = "Main Game Screen"
 
     def execute_tick(self):
         #  Game logic goes here
@@ -66,9 +37,9 @@ class MapAndUI(object):
 
 
 class Tile(object):
-    def __init__(self, tile_terrain: entities.Terrain,
-                 building: typing.Union[entities.Building, entities.NullEntity],
-                 unit: typing.Union[entities.Unit, entities.NullEntity]):
+    def __init__(self, tile_terrain: "entities.Terrain",
+                 building: typing.Union["entities.Building", "entities.NullEntity"],
+                 unit: typing.Union["entities.Unit", "entities.NullEntity"]):
         self.terrain = tile_terrain
         self.building = building
         self.unit = unit
@@ -76,31 +47,31 @@ class Tile(object):
 
 class Map(object):
     def __init__(self, world_setup: "WorldSetup"):
-        self.world_setup = world_setup  # type: world_setup.WorldSetup
-        self._map = []
-        self._init_map(self.world_setup.map_path)
+        self.world_setup = world_setup  # type: WorldSetup
+        self._map = self._init_map(self.world_setup.map_setup.entity_seed_array)
 
-    def get_entities(self, layer: typing.Type["Layer"], location: Location) -> entities.Entity:
-        if layer == TerrainLayer:
+    def get_entities(self, layer: typing.Type["layers.Layer"], location: Location) -> \
+            "entities.Entity":
+        if layer == layers.TerrainLayer:
             return self.get_terrain(location)
-        elif layer == BuildingLayer:
+        elif layer == layers.BuildingLayer:
             return self.get_building(location)
-        elif layer == UnitLayer:
+        elif layer == layers.UnitLayer:
             return self.get_unit(location)
         else:
             raise TypeError
 
-    def get_terrain(self, location: Location) -> entities.Terrain:
+    def get_terrain(self, location: Location) -> "entities.Terrain":
         tile = self.get_tile(location)
         terrain = tile.terrain
         return terrain
 
-    def get_building(self, location: Location) -> entities.Building:
+    def get_building(self, location: Location) -> "entities.Building":
         tile = self.get_tile(location)
         building = tile.building
         return building
 
-    def get_unit(self, location: Location) -> entities.Unit:
+    def get_unit(self, location: Location) -> "entities.Unit":
         tile = self.get_tile(location)
         unit = tile.unit
         return unit
@@ -116,66 +87,23 @@ class Map(object):
     def height(self) -> int:
         return len(self._map[0])
 
-    def _init_map(self, map_filename: str):
-        def parse_map_file(map_filename: str):
-            map_xml = ElementTree.parse(map_filename)
-            root = map_xml.getroot()
-            for column_xml in root:
-                column = _create_column(column_xml)
-                self._map.append(column)
+    def _init_map(self, entity_seed_array: list):
+        world_map = []
+        for column in entity_seed_array:
+            column = self._create_column(column)
+            world_map.append(column)
+        return world_map
 
-        def _create_column(column_xml: ElementTree.Element):
-            column_list = []
-            for tile in column_xml:
-                tile_terrain = _xml_to_tile_element(TerrainLayer, tile)
-                tile_building = _xml_to_tile_element(BuildingLayer, tile)
-                tile_unit = _xml_to_tile_element(UnitLayer, tile)
+    def _create_column(self, column: list):
+        tiles = []
+        for seed_tile in column:
+            tile_terrain = self.world_setup.entity_from_seed(seed_tile.terrain)
+            tile_building = self.world_setup.entity_from_seed(seed_tile.building)
+            tile_unit = self.world_setup.entity_from_seed(seed_tile.unit)
 
-                new_tile = Tile(tile_terrain, tile_building, tile_unit)
-                column_list.append(new_tile)
-            return column_list
-
-        def _xml_to_tile_element(layer: typing.Type[Layer], tile: ElementTree.Element) -> \
-                typing.Union[entities.Terrain, entities.Building, entities.Unit]:
-
-            str_army, str_element, player = _xml_element_to_dict_keys(layer, tile)
-            player = int(player)
-            tile_element = self.access_entity_dict(layer, str_army, str_element)
-            if player == -1:
-                tile_element_instance = tile_element()  # no player
-            else:
-                tile_element_instance = tile_element(self.world_setup.players[player])
-            # choice dynamic from map xml
-            return tile_element_instance
-
-        def _xml_element_to_dict_keys(layer: typing.Type[Layer], tile: ElementTree.Element) -> \
-                typing.Tuple[str, str, int]:
-            try:
-                data = tile.findall(layer.name)[0]
-            except IndexError:
-                return "neutral", "null_entity", -1
-
-            try:
-                army = data.findall("army")[0].text
-            except IndexError:
-                army = "neutral"  # default when no army given
-
-            try:
-                name = data.findall("name")[0].text
-            except IndexError:
-                name = data.text  # shorthand for neutrals
-
-            try:
-                player = data.findall("player")[0].text
-            except IndexError:
-                player = -1  # shorthand for neutrals
-
-            return army, name, player
-
-        parse_map_file(map_filename)
-
-    def access_entity_dict(self, layer: typing.Type[Layer], army: str, element: str):
-        return self.world_setup.entity_dict[layer.name][army][element]
+            tile = Tile(tile_terrain, tile_building, tile_unit)
+            tiles.append(tile)
+        return tiles
 
 
 class TopBar(object):
@@ -190,7 +118,7 @@ class WorldMenu(object):
 
 class MapDrawing(object):
     def __init__(self, content, display: graphics.Display):
-        self.display = display  # type: display.Display
+        self.display = display  # type: graphics.Display
         self.content = content
         self.top_bar = self.content.top_bar
         self.map = content.map
@@ -211,27 +139,27 @@ class MapDrawing(object):
         self.display.blit(sprite, screen_pixel)
 
     def draw_map(self):
-        self.draw_map_layer(TerrainLayer)
-        self.draw_map_layer(BuildingLayer)
-        self.draw_map_layer(UnitLayer)
+        self.draw_map_layer(layers.TerrainLayer)
+        self.draw_map_layer(layers.BuildingLayer)
+        self.draw_map_layer(layers.UnitLayer)
 
-    def draw_map_layer(self, layer: typing.Type[Layer]):
+    def draw_map_layer(self, layer: typing.Type[layers.Layer]):
         for y in range(self.map.width):
             for x in range(self.map.height):
                 location = point.Location(x, y)
                 self.draw_tile_layer(layer, location)
 
-    def draw_tile_layer(self, layer: typing.Type[Layer], location: point.Location):
+    def draw_tile_layer(self, layer: typing.Type[layers.Layer], location: point.Location):
         entity = self.map.get_entities(layer, location)
         self.draw_entity_if_not_null_entity(entity, location)
 
-    def draw_entity_if_not_null_entity(self, entity: entities.Entity, location: point.Location):
+    def draw_entity_if_not_null_entity(self, entity: "entities.Entity", location: point.Location):
         try:
             self._draw_entity_if_sprite_found(entity, location)
         except sprites.DrawNullEntityException:
             pass
 
-    def _draw_entity_if_sprite_found(self, entity: entities.Entity, location: point.Location):
+    def _draw_entity_if_sprite_found(self, entity: "entities.Entity", location: point.Location):
         sprite = entity.sprite
         if sprite:
             self._draw_entity_sprite(sprite, location)

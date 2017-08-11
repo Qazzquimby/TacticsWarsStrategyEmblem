@@ -1,31 +1,17 @@
-import abc
 import typing
 
 import pygame
 
 import armymod
 import graphics
+import importer
 import screens
 import user_input
-
-
-class MenuState(abc.ABC):
-    def __init__(self):
-        pass
-
-
-class MapScreen(screens.GameScreen):
-    def _receive_input(self, curr_input: user_input.Input):
-        pass
-
-    def execute_tick(self):
-        pass
+import world_screen
 
 
 class Menu(object):
-    def __init__(self,
-                 wrap_length: int,
-                 background: pygame.Surface,
+    def __init__(self, wrap_length: int, background: pygame.Surface,
                  button_list: typing.List["Button"]):
 
         self.wrap_length = wrap_length  # number of items before wrapping
@@ -88,9 +74,9 @@ class Menu(object):
     def selected_button(self):
         return self.menu_items[self.selection]
 
-    def remove_buttons(self, indexList):
+    def remove_buttons(self, index_list):
         old_contained_rect = self.contained_rect
-        for index in indexList:
+        for index in index_list:
             # if len(self.menu_items) > 1: #Original, always leaves one
             if len(self.menu_items) > 0:
                 self.menu_items.pop(index)
@@ -162,7 +148,6 @@ class Menu(object):
         max_width = 0
         max_height = 0
         counter = 0
-        x_loc = 0
         y_loc = 0
 
         # Get the maximum width and height of the surfaces
@@ -174,40 +159,20 @@ class Menu(object):
 
         # Position the button in relation to each other
         for button in self.menu_items:
-            # Find the offsets for the alignment of the buttons (left, center, or  right
-            # Vertical Alignment
             offset_height = (max_height - button.rect[3]) / 2
-
-            # Horizontal Alignment
-            if self.alignment['horizontal'] == 'left':
-                offset_width = 0
-            elif self.alignment['horizontal'] == 'center':
-                offset_width = (max_width - button.rect[2]) / 2
-            elif self.alignment['horizontal'] == 'right':
-                offset_width = (max_width - button.rect[2])
-            else:
-                offset_width = 0
-                print("WARNING:  cMenu.position_buttons:  Horizontal "
-                      "Alignment (value: %s) not recognized!  Left alignment "
-                      "will be used % self.alignment['horizontal']")
-
-            # Move the button location slightly based on the alignment offsets
-            x_loc += offset_width
-            y_loc += offset_height
+            offset_width = (max_width - button.rect[2]) / 2
 
             # Assign the location of the button
-            button.offset = (x_loc, y_loc)
-            x_loc -= offset_width
-            y_loc -= offset_height
+            button.offset = (offset_width, y_loc + offset_height)
             y_loc += max_height
             counter += 1
             if counter == self.wrap_length:
                 counter = 0
-                x_loc += max_width
                 y_loc = 0
 
         # Find the smallest Rect that will contain all of the buttons
         self.contained_rect = self.menu_items[0].rect.move(button.offset)
+
         for button in self.menu_items:
             temp_rect = button.rect.move(button.offset)
             self.contained_rect.union_ip(temp_rect)
@@ -264,7 +229,7 @@ class Menu(object):
     def destroy_everything(self):
         while len(self.menu_items) > 0:
             self.remove_buttons([len(self.menu_items) - 1])
-        self.draw_buttons(pygame.Rect((0, 0), self.draw_surface.get_size()))
+        self.draw_buttons()
 
     def receive_input(self, curr_input: user_input.Input):
         self.selected_button.receive_input(curr_input)
@@ -307,6 +272,8 @@ class Button(object):
 
 class SelectionButton(Button):
     def __init__(self, menu, button_list: typing.List[Button]):
+        if len(button_list) == 0:
+            raise ValueError("Button list empty")
         Button.__init__(self, menu, None, None)
         self.button_list = button_list
         self.selection = 0
@@ -317,7 +284,11 @@ class SelectionButton(Button):
 
     @property
     def text(self):
-        return self.selected_button.text
+        try:
+            return self.selected_button.text
+        except AttributeError:
+            raise AttributeError("One of the selection button's buttons was given None as its "
+                                 "text.")
 
     @property
     def confirm(self):
@@ -375,14 +346,52 @@ class ArmySelectMenu(Menu):
         self.session.game_over = True
 
 
-class ConnectionScreen(screens.GameScreen):
-    def __init__(self, display, session):
-        screens.GameScreen.__init__(self, display, session)
-        self.content = ArmySelectMenu(display, session)
-        self.name = "Connection Screen"
+class MapSelectMenu(Menu):
+    def __init__(self, screen_engine):
+        self.screen_engine = screen_engine
+        self.display = screen_engine.display
+        self.session = screen_engine.session
+
+        self.map_importer = importer.MapImporter(["../maps"])
+        self.world_setups = self.map_importer.plugins
+
+        map_buttons = [
+            Button(self, world_setup.map_setup.name, self.world_setup_confirm_factory(world_setup))
+            for world_setup in self.world_setups]
+
+        button_list = [SelectionButton(self, map_buttons),
+                       Button(self, "Quit", self.quit_game)]
+
+        background = self.display.surface
+        Menu.__init__(self, 5, background, button_list)
+
+    def world_setup_confirm_factory(self, world_setup):
+        def world_setup_confirm_function():
+            main_screen = world_screen.MainGameScreen(self.screen_engine, world_setup)
+            self.screen_engine.push_screen(main_screen)
+
+        return world_setup_confirm_function
+
+    def quit_game(self):
+        self.session.quit_game()
+
+
+class MenuScreen(screens.GameScreen):
+    def __init__(self, screen_engine):
+        screens.GameScreen.__init__(self, screen_engine)
 
     def execute_tick(self):
         self.content.draw_buttons()
 
     def _receive_input(self, curr_input: user_input.Input):
         self.content.receive_input(curr_input)
+
+    def exit(self):
+        self.content.destroy_everything()
+
+
+class MapSelectScreen(MenuScreen):
+    def __init__(self, screen_engine):
+        screens.GameScreen.__init__(self, screen_engine)
+        self.content = MapSelectMenu(screen_engine)
+        self.name = "Map Selection Screen"

@@ -9,9 +9,6 @@ import session
 import user_input
 
 
-# fixme patching over missing army select
-
-
 class Clock(object):
     def __init__(self):
         self.FPS = 30
@@ -19,7 +16,6 @@ class Clock(object):
 
     def wait_for_next_tick(self):
         self.pygame_clock.tick(self.ms_per_frame)
-
 
     @property
     def ms_per_frame(self):
@@ -33,13 +29,17 @@ class Main(object):
 
         self.session = session.Session()  # type: session.Session
         self.display = graphics.Display()  # type: graphics.Display
-        self.state_engine = screens.ScreenEngine(
-            self.display, self.session, self.setup_initial_screen())  # type:screens.ScreenEngine
+
+        self.screen_engine = screens.ScreenEngine(self.display,
+                                                  self.session)  # type:screens.ScreenEngine
+        self.screen_engine.push_screen(self.setup_initial_screen())
 
         self.clock = Clock()
-
         self.input_interpreter = user_input.InputInterpreter()  # type: user_input.InputInterpreter
 
+        self.run_game()
+
+    def run_game(self):
         self.game_loop()
         self.uninit()
 
@@ -49,7 +49,7 @@ class Main(object):
 
     def execute_tick(self):
         current_input = self.input_interpreter.interpret_input()
-        self.state_engine.execute_tick(current_input)
+        self.screen_engine.execute_tick(current_input)
         self.display.execute_tick()
         self.clock.wait_for_next_tick()
 
@@ -61,7 +61,7 @@ class Main(object):
         # world_setup.add_player(army_importer.plugins[0])
         # return world_screen.MainGameScreen(self.display, self.session, world_setup)
 
-        return menus.ConnectionScreen(self.display, self.session)
+        return menus.MapSelectScreen(self.screen_engine)
 
     def uninit(self):
         self.quit_game()
