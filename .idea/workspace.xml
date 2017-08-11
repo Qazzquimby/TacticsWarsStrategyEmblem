@@ -5,19 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="720812d0-50dc-4d5c-bcee-ad184f39bae6" name="Default" comment="Added map importing from the map folder.&#10;Separated layers to new file layers.py&#10;Screens and menus are passed the state engine, rather than display and session.&#10;Added enter and exit functions to screens.&#10;Added player manager class. Removed army as a value belonging to player.&#10;&#10;Map is now built in two steps. WorldSetup creates a MapSetup which makes a 2d array of EntitySeeds.&#10;Entity seeds can be passed to WorldDict.entity_from_seed() to instanciate the entity.&#10;This way the map only gets instantiated when it is actually loaded, but the map data is visible in world_setup.">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/maps/copy_map_filename.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/layers.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/world_setups.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/world_setup.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/maps/map_filename.xml" afterPath="$PROJECT_DIR$/maps/map_filename.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/importer.py" afterPath="$PROJECT_DIR$/src/importer.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.py" afterPath="$PROJECT_DIR$/src/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/menus.py" afterPath="$PROJECT_DIR$/src/menus.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/players.py" afterPath="$PROJECT_DIR$/src/players.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/screens.py" afterPath="$PROJECT_DIR$/src/screens.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/world_screen.py" afterPath="$PROJECT_DIR$/src/world_screen.py" />
     </list>
     <ignored path="TacticsWarsStrategyEmblem.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -72,8 +60,8 @@
       <file leaf-file-name="menus.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/menus.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="268">
-              <caret line="177" column="51" lean-forward="true" selection-start-line="177" selection-start-column="51" selection-end-line="177" selection-end-column="51" />
+            <state relative-caret-position="188">
+              <caret line="173" column="73" lean-forward="true" selection-start-line="173" selection-start-column="73" selection-end-line="173" selection-end-column="73" />
               <folding>
                 <element signature="e#2492#2790#0" expanded="false" />
                 <element signature="e#3310#5316#0" expanded="false" />
@@ -759,7 +747,14 @@
       <option name="project" value="LOCAL" />
       <updated>1502178116840</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Added map importing from the map folder.&#10;Separated layers to new file layers.py&#10;Screens and menus are passed the state engine, rather than display and session.&#10;Added enter and exit functions to screens.&#10;Added player manager class. Removed army as a value belonging to player.&#10;&#10;Map is now built in two steps. WorldSetup creates a MapSetup which makes a 2d array of EntitySeeds.&#10;Entity seeds can be passed to WorldDict.entity_from_seed() to instanciate the entity.&#10;This way the map only gets instantiated when it is actually loaded, but the map data is visible in world_setup.">
+      <created>1502439952670</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1502439952670</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -808,7 +803,7 @@
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936078" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26849896" sideWeight="0.50208336" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32719395" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
@@ -843,6 +838,7 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="Restructured initial documents. &#10;Added testing interface." />
     <MESSAGE value="Begun work on graphics" />
     <MESSAGE value="Entities load sprite sheets.&#10;Sprite sheets are cropped to smallest top left rectangle not containing empty rows or columns" />
@@ -1206,8 +1202,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/menus.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="268">
-          <caret line="177" column="51" lean-forward="true" selection-start-line="177" selection-start-column="51" selection-end-line="177" selection-end-column="51" />
+        <state relative-caret-position="188">
+          <caret line="173" column="73" lean-forward="true" selection-start-line="173" selection-start-column="73" selection-end-line="173" selection-end-column="73" />
           <folding>
             <element signature="e#2492#2790#0" expanded="false" />
             <element signature="e#3310#5316#0" expanded="false" />
