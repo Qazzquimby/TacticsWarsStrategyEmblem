@@ -108,12 +108,14 @@ class Map(object):
 
 class TopBar(object):
     def __init__(self):
-        self.sprite = sprites.SpriteAnimation("", "sprites/top_bar").sprite_sheet.surface
+        self.sprite = sprites.SpriteAnimation("",
+                                              "sprites/top_bar").sprite_sheet.original_sprite_sheet_surface
 
 
 class WorldMenu(object):
     def __init__(self):
-        self.sprite = sprites.SpriteAnimation("", "sprites/world_menu").sprite_sheet.surface
+        self.sprite = sprites.SpriteAnimation("",
+                                              "sprites/world_menu").sprite_sheet.original_sprite_sheet_surface
 
 
 class MapDrawing(object):
@@ -168,8 +170,7 @@ class MapDrawing(object):
 
     def _draw_entity_sprite(self, sprite: pygame.Surface, location: point.Location):
         screen_tile = point.TilePoint(location.x + self.map_center_offset.x,
-                                      location.y + self.map_center_offset.y +
-                                      graphics.TOP_BAR_TILE_HEIGHT)
+                                      location.y + self.map_center_offset.y + graphics.TOP_BAR_TILE_HEIGHT)
         screen_pixel = screen_tile.to_pixel_point()
 
         self.display.blit(sprite, screen_pixel)

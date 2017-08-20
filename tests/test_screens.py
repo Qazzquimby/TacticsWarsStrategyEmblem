@@ -1,16 +1,15 @@
 from unittest import TestCase
 
-import state_engine
-
 import graphics
-import session
+import screens
+import sessionmod
 
 
-class TestStateEngine(TestCase):
+class TestScreenEngine(TestCase):
     def setUp(self):
         self.display = graphics.Display()
-        self.session = session.Session()
-        self.state_engine = state_engine.StateEngine(graphics, session)
+        self.session = sessionmod.Session()
+        self.state_engine = screens.ScreenEngine(self.display, self.session)
 
     def test_setup_initial_screen(self):
         self.state_engine.setup_initial_screen()

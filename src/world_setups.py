@@ -116,14 +116,6 @@ class WorldSetup(object):
     def players(self):
         return self.map_setup.players.player_list
 
-    # def add_player(self, army: "armymod.Army"):
-    #     new_player_number = len(self.players)
-    #     new_player = players.Player(new_player_number, army)
-    #     self.players.append(new_player)
-    #
-    #     # todo current player
-    #     # todo next player
-
     def _initialize_entity_dict(self):
         entity_dict = {}
         for layer in [layers.TerrainLayer,
@@ -142,7 +134,7 @@ class WorldSetup(object):
         return entity_dict
 
     def _populate_dict_from_terrain(self, entity_dict: dict):
-        for terrain_type in entities.terrain_list:
+        for terrain_type in entities.TERRAIN_LIST:
             entity_dict[layers.TerrainLayer.name]["neutral"][
                 terrain_type().code_name] = terrain_type
 

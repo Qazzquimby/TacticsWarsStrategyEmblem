@@ -1,15 +1,16 @@
 import abc
 
+# Type checking
+import graphics
+import sessionmod
 import user_input
-from graphics import Display
-from session import Session
 
 
 class ScreenEngine(object):
-    def __init__(self, display, session):
+    def __init__(self, display: graphics.Display, session: sessionmod.Session):
         self._screen_stack = []
-        self.display = display  # type: Display
-        self.session = session  # type: Session
+        self.display = display  # type: graphics.Display
+        self.session = session  # type: sessionmod.Session
 
     @property
     def screen(self) -> "GameScreen":
@@ -34,7 +35,7 @@ class ScreenEngine(object):
         self.pop_screen()
         self.push_screen(screen)
 
-    def receive_input(self, current_input: user_input.Input):
+    def receive_input(self, current_input: ""):
         if current_input:
             self.screen.receive_input(current_input)
 
@@ -47,10 +48,10 @@ class ScreenEngine(object):
 
 
 class GameScreen(abc.ABC):
-    def __init__(self, screen_engine: "ScreenEngine"):
+    def __init__(self, screen_engine: ScreenEngine):
         self.screen_engine = screen_engine
-        self.display = screen_engine.display  # type: Display
-        self.session = screen_engine.session  # type: Session
+        self.display = screen_engine.display  # type: graphics.Display
+        self.session = screen_engine.session  # type: sessionmod.Session
         self.name = NotImplemented  # type: str
         self.content = NotImplemented
 
@@ -73,6 +74,7 @@ class GameScreen(abc.ABC):
 
 class EmptyScreen(GameScreen):
     def __init__(self):
+        # Initialized before screen_engine, so does not run GameScreen.__init__ which requires it.
         pass
 
     def execute_tick(self):

@@ -5,13 +5,14 @@ import pygame
 import graphics
 import menus
 import screens
-import session
+import sessionmod
 import user_input
+
+FPS = 30
 
 
 class Clock(object):
     def __init__(self):
-        self.FPS = 30
         self.pygame_clock = pygame.time.Clock()
 
     def wait_for_next_tick(self):
@@ -19,7 +20,7 @@ class Clock(object):
 
     @property
     def ms_per_frame(self):
-        return int(1000 / self.FPS)
+        return int(1000 / FPS)
 
 
 class Main(object):
@@ -27,17 +28,21 @@ class Main(object):
         pygame.init()
         pygame.display.set_caption("Tactics Wars Strategy Emblem")
 
-        self.session = session.Session()  # type: session.Session
+        self.session = sessionmod.Session()  # type: sessionmod.Session
         self.display = graphics.Display()  # type: graphics.Display
 
-        self.screen_engine = screens.ScreenEngine(self.display,
-                                                  self.session)  # type:screens.ScreenEngine
-        self.screen_engine.push_screen(self.setup_initial_screen())
+        self.screen_engine = self.init_screen_engine()
 
         self.clock = Clock()
         self.input_interpreter = user_input.InputInterpreter()  # type: user_input.InputInterpreter
 
         self.run_game()
+
+    def init_screen_engine(self):
+        screen_engine = screens.ScreenEngine(self.display, self.session)
+        initial_screen = menus.MapSelectScreen(screen_engine)
+        screen_engine.push_screen(initial_screen)
+        return screen_engine
 
     def run_game(self):
         self.game_loop()
@@ -53,16 +58,6 @@ class Main(object):
         self.display.execute_tick()
         self.clock.wait_for_next_tick()
 
-    def setup_initial_screen(self):
-        # fixme mockup
-        # world_setup = WorldSetup()
-        # army_importer = armymod.ArmyImporter()
-        # world_setup.add_player(IronLegion())
-        # world_setup.add_player(army_importer.plugins[0])
-        # return world_screen.MainGameScreen(self.display, self.session, world_setup)
-
-        return menus.MapSelectScreen(self.screen_engine)
-
     def uninit(self):
         self.quit_game()
 
@@ -72,4 +67,4 @@ class Main(object):
 
 
 if __name__ == "__main__":
-    main = Main()
+    MAIN = Main()

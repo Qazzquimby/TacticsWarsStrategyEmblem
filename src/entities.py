@@ -3,11 +3,12 @@ import abc
 import pygame
 from yapsy.IPlugin import IPlugin
 
+import armymod
 import colors
+import players
 import sprites
 from classproperty import classproperty
 from importer import Importer
-import players
 
 
 class Entity(abc.ABC):
@@ -77,8 +78,12 @@ class OwnedEntity(Entity, abc.ABC):
     def _initialize_class(self):
         self._army = self.army
 
-        self._sprite_location = "armies/" + self.army().code_name + "/sprites" + \
-                                self._sprite_location_type
+        army_class = self.army
+        army_instance = army_class()
+        army_name = army_instance.code_name
+
+        self._sprite_location = "armies/{0}/sprites{1}".format(army_name,
+                                                               self._sprite_location_type)
 
         self._animation_red = sprites.SpriteAnimation(self.sprite_location,
                                                       self.code_name)
@@ -157,4 +162,4 @@ class Grass(Terrain):
         Terrain.__init__(self)
 
 
-terrain_list = [Grass]
+TERRAIN_LIST = [Grass]
