@@ -16,6 +16,7 @@ class Entity(abc.ABC):
     _code_name = NotImplemented  # type: str
     _sprite_location = ""  # type: str
     _initialized = False
+    animation_speed = None
 
     def __init__(self):
         self._initialize_class_if_uninitialized()
@@ -61,7 +62,8 @@ class UnownedEntity(Entity, abc.ABC):
 
     def _initialize_class(self):
         self._animation = sprites.SpriteAnimation(self.sprite_location,
-                                                  self.code_name)
+                                                  self.code_name,
+                                                  self.animation_speed)
 
 
 class OwnedEntity(Entity, abc.ABC):
@@ -86,9 +88,11 @@ class OwnedEntity(Entity, abc.ABC):
                                                                self._sprite_location_type)
 
         self._animation_red = sprites.SpriteAnimation(self.sprite_location,
-                                                      self.code_name)
+                                                      self.code_name,
+                                                      self.animation_speed)
         self._animation_blue = sprites.SpriteAnimation(self.sprite_location,
-                                                       self.code_name)
+                                                       self.code_name,
+                                                       self.animation_speed)
         self._army().add_entity(self.__class__)
 
     @property

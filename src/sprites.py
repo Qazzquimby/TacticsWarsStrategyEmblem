@@ -4,11 +4,19 @@ import typing
 import pygame
 
 import graphics
-import point
+import points
 
 
 class SpriteAnimation(object):
-    def __init__(self, sprite_location: str, file_name: str):
+    def __init__(self,
+                 sprite_location: str,
+                 file_name: str,
+                 animation_frame_length: typing.Optional[int] = None):
+
+        self.animation_frame_length = animation_frame_length
+        if self.animation_frame_length is None:
+            self.animation_frame_length = graphics.ANIMATION_FRAME_LENGTH  # type: int
+
         self.sprite_sheet = SpriteSheet(sprite_location, file_name)
         self.sprite_list = self.sprite_sheet.sprite_list  # type: list
         self._current_sprite_index = random.randrange(0, len(self.sprite_list) - 1)
@@ -25,13 +33,15 @@ class SpriteAnimation(object):
         self._update_sprite_index()
 
     def _increment_time_spent(self):
-        self._time_spent_at_index = \
-            (self._time_spent_at_index + 1) % graphics.ANIMATION_FRAME_LENGTH
+        try:
+            self._time_spent_at_index = (
+                                            self._time_spent_at_index + 1) % self.animation_frame_length
+        except ZeroDivisionError:
+            raise ValueError("sprite animation given frame length of 0")
 
     def _update_sprite_index(self):
         if self._time_spent_at_index == 0:
-            self._current_sprite_index = \
-                (self._current_sprite_index + 1) % len(self.sprite_list)
+            self._current_sprite_index = (self._current_sprite_index + 1) % len(self.sprite_list)
 
 
 class SpriteSheet(object):
@@ -103,16 +113,16 @@ class SpriteSheet(object):
         is_empty = True
         for pixel_y in range(graphics.TILE_SIZE):
             for pixel_x in range(graphics.TILE_SIZE):
-                screen_pixel = point.PixelPoint(tile_x * graphics.TILE_SIZE + pixel_x,
-                                                tile_y * graphics.TILE_SIZE + pixel_y)
+                screen_pixel = points.ScreenPoint(tile_x * graphics.TILE_SIZE + pixel_x,
+                                                  tile_y * graphics.TILE_SIZE + pixel_y)
                 if not self._is_pixel_empty(screen_pixel):
                     is_empty = False
                     break
         return is_empty
 
-    def _is_pixel_empty(self, pixel_point: point.PixelPoint) -> bool:
-        sprite_color = self.original_sprite_sheet_surface.get_at((pixel_point.x, pixel_point.y))
-        is_empty = sprite_color == (255, 255, 255)
+    def _is_pixel_empty(self, point: points.ScreenPoint) -> bool:
+        sprite_color = self.original_sprite_sheet_surface.get_at(point.pixel)
+        is_empty = sprite_color == graphics.TRANSPARENT
         return is_empty
 
     def _make_sprite_list(self):

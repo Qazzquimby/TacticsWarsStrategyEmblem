@@ -1,4 +1,4 @@
-import sys
+import cProfile
 
 import pygame
 
@@ -9,6 +9,7 @@ import sessionmod
 import user_input
 
 FPS = 30
+PROFILE = False  # Keep profiler metrics each frame
 
 
 class Clock(object):
@@ -53,17 +54,30 @@ class Main(object):
             self.execute_tick()
 
     def execute_tick(self):
+        if PROFILE:
+            profiler = cProfile.Profile(builtins=False)
+            profiler.enable()
+
         current_input = self.input_interpreter.interpret_input()
+        if current_input is not None:
+            if isinstance(current_input, user_input.Quit):
+                self.session.quit_game()
         self.screen_engine.execute_tick(current_input)
         self.display.execute_tick()
         self.clock.wait_for_next_tick()
+
+        if PROFILE:
+            profiler.disable()
+            profiler.create_stats()
+            profiler.print_stats()
+            profiler.dump_stats("profile_output")
 
     def uninit(self):
         self.quit_game()
 
     def quit_game(self):
         pygame.quit()
-        sys.exit()
+        # sys.exit()
 
 
 if __name__ == "__main__":

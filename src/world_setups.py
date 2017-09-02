@@ -158,4 +158,7 @@ class WorldSetup(object):
         return entity_instance
 
     def access_entity_dict(self, layer: typing.Type[layers.Layer], army: str, entity: str):
-        return self.entity_dict[layer.name][army][entity]
+        try:
+            return self.entity_dict[layer.name][army][entity]
+        except KeyError:
+            raise KeyError(entity + " not defined. Were they initialized in the army module?")

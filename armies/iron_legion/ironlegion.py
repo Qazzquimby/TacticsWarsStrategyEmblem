@@ -22,3 +22,16 @@ class HQ(entities.Building):
 
 
 HQ(None)
+
+
+class Marine(entities.Unit):
+    _name = "Marine"
+    _code_name = "marine"
+    _army = IronLegion
+    animation_speed = 5
+
+    def __init__(self, player):
+        entities.Unit.__init__(self, player)
+
+
+Marine(None)

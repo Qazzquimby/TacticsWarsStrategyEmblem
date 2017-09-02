@@ -65,12 +65,13 @@ class ControlMap(object):
         """_input_dict maps ("keyname", isKeyUp) to an Input"""
 
         self._input_dict = {
-            ("x", True): Confirm,
-            ("z", True): Back,
-            ("left", True): Left,
-            ("up", True): Up,
-            ("right", True): Right,
-            ("down", True): Down,
+            ("x", 2): Confirm,
+            ("z", 2): Back,
+            ("q", 2): Quit,
+            ("left", 2): Left,
+            ("up", 2): Up,
+            ("right", 2): Right,
+            ("down", 2): Down,
         }
 
     def key_to_input(self, key: (str, int)) -> typing.Optional[typing.Type[Input]]:
@@ -80,6 +81,17 @@ class ControlMap(object):
         except KeyError:
             return None
 
+
+class Quit(Input):
+    _PRIORITY = 0
+    name = "quit"
+
+    def __init__(self):
+        Input.__init__(self)
+
+    @property
+    def priority(self):
+        return self._PRIORITY
 
 class Confirm(Input):
     _PRIORITY = 1

@@ -15,8 +15,8 @@ class ScreenEngine(object):
     @property
     def screen(self) -> "GameScreen":
         if len(self._screen_stack) == 0:
-            # self.push_screen(self.main_game_screen)
             self.quit_game()
+            # self.push_screen(EmptyScreen())
             return EmptyScreen()
         return self._screen_stack[len(self._screen_stack) - 1]
 
@@ -28,14 +28,17 @@ class ScreenEngine(object):
 
     def pop_screen(self):
         self.screen.exit()
-        self._screen_stack.pop(len(self._screen_stack) - 1)
+        try:
+            self._screen_stack.pop(len(self._screen_stack) - 1)
+        except IndexError:
+            pass
         self.screen.enter()
 
     def switch_screen(self, screen: "GameScreen"):
         self.pop_screen()
         self.push_screen(screen)
 
-    def receive_input(self, current_input: ""):
+    def receive_input(self, current_input: user_input.Input):
         if current_input:
             self.screen.receive_input(current_input)
 
