@@ -13,11 +13,11 @@ class Input(abc.ABC):
     _PRIORITY = None  # type: int
     name = None  # type: str
 
-    def __init__(self):
-        pass
-
     def __lt__(self, other):
         return self.priority < other.priority
+
+    def __eq__(self, other):
+        return self.priority == other.priority
 
     @property
     def priority(self) -> int:
@@ -38,7 +38,7 @@ class InputInterpreter(object):
 
         inputs = self._get_inputs()
         if inputs:
-            return min(inputs)  # input with lowest priority
+            return min(inputs)  # input with lowest priority #todo fix with static classes
         else:
             return None
 
@@ -53,7 +53,7 @@ class InputInterpreter(object):
                 curr_input = self.control_map.key_to_input((pygame.key.name(event.key), KEY_UP))
 
             if callable(curr_input):
-                inputs.append(curr_input())
+                inputs.append(curr_input)
 
         return inputs
 
@@ -86,19 +86,14 @@ class Quit(Input):
     _PRIORITY = 0
     name = "quit"
 
-    def __init__(self):
-        Input.__init__(self)
-
     @property
     def priority(self):
         return self._PRIORITY
 
+
 class Confirm(Input):
     _PRIORITY = 1
     name = "confirm"
-
-    def __init__(self):
-        Input.__init__(self)
 
     @property
     def priority(self):
@@ -109,9 +104,6 @@ class Back(Input):
     _PRIORITY = 2
     name = "back"
 
-    def __init__(self):
-        Input.__init__(self)
-
     @property
     def priority(self):
         return self._PRIORITY
@@ -120,9 +112,6 @@ class Back(Input):
 class Left(Input):
     _PRIORITY = 3
     name = "left"
-
-    def __init__(self):
-        Input.__init__(self)
 
     @property
     def priority(self):
@@ -133,9 +122,6 @@ class Up(Input):
     _PRIORITY = 4
     name = "up"
 
-    def __init__(self):
-        Input.__init__(self)
-
     @property
     def priority(self):
         return self._PRIORITY
@@ -145,9 +131,6 @@ class Right(Input):
     _PRIORITY = 5
     name = "right"
 
-    def __init__(self):
-        Input.__init__(self)
-
     @property
     def priority(self):
         return self._PRIORITY
@@ -156,9 +139,6 @@ class Right(Input):
 class Down(Input):
     _PRIORITY = 6
     name = "down"
-
-    def __init__(self):
-        Input.__init__(self)
 
     @property
     def priority(self):

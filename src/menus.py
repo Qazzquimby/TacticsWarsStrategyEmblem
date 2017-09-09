@@ -63,19 +63,19 @@ class SelectionButton(Button):
         return self.selected_button.confirm
 
     def receive_input(self, curr_input: user_input.Input):
-        if isinstance(curr_input, user_input.Confirm):
+        if curr_input == user_input.Confirm:
             self.confirm()
 
-        elif isinstance(curr_input, user_input.Up):
+        elif curr_input == user_input.Up:
             self.menu.select_up()
 
-        elif isinstance(curr_input, user_input.Down):
+        elif curr_input == user_input.Down:
             self.menu.select_down()
 
-        elif isinstance(curr_input, user_input.Left):
+        elif curr_input == user_input.Left:
             self.left_choose_option()
 
-        elif isinstance(curr_input, user_input.Right):
+        elif curr_input == user_input.Right:
             self.right_choose_option()
 
     def left_choose_option(self):

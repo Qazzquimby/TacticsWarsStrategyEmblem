@@ -45,6 +45,15 @@ class Point(abc.ABC):
         pixel = self.pixel
         return pixel[1]
 
+    @property
+    def pixel_y(self) -> int:
+        pixel = self.pixel
+        return pixel[1]
+
+    def directed_neighbour(self, direction: "Direction"):
+        starting_point = Point(self.pixel_x, self.pixel_y)
+        return starting_point + direction.point
+
     def __add__(self, other):
         return Point(self.pixel_x + other.pixel_x, self.pixel_y + other.pixel_y)
 

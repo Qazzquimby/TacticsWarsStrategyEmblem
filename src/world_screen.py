@@ -2,6 +2,9 @@ import typing
 
 import pygame
 
+import commands
+import cursor
+import directions
 import entities
 import graphics
 import layers
@@ -18,13 +21,12 @@ class MainGameScreen(screens.GameScreen):
     def __init__(self, screen_engine, world_setup):
         screens.GameScreen.__init__(self, screen_engine)
         self.world_setup = world_setup
-        self.content = MapAndUI(self.world_setup)
-        self.animation = MapDrawing(self.content, self.display)
+        self.content = MapAndUI(self.world_setup, self.display)
         self.name = "Main Game Screen"
 
     def execute_tick(self):
         #  Game logic goes here
-        self.animation.execute_tick()
+        self.content.map_drawing.execute_tick()
 
     def _receive_input(self, curr_input: user_input.Input):
         self.content.receive_input(curr_input)
@@ -33,20 +35,23 @@ class MainGameScreen(screens.GameScreen):
 class MapAndUI(object):
     """Packages game screen elements"""
 
-    def __init__(self, world_setup):
+    def __init__(self, world_setup, display):
         self.top_bar = TopBar()
         self.map = Map(world_setup)
         self.world_menu = WorldMenu()
+        self.map_drawing = MapDrawing(self, display)
 
         self.selection = None  # Entity currently being manipulated
 
     def receive_input(self, curr_input: user_input.Input):
         # todo: cursor selection, unit-menu, unit-cursor
-        if self.selection is None:
-            pass  # todo
-            # self.map.cursor.move(curr_input)
-        else:
-            self.selection.receive_input(curr_input)
+        selection = self.selection
+        if selection is None:
+            selection = self.map.cursor
+
+        command = selection.receive_input(curr_input)  # type: typing.Optional[typing.Type[commands.Command]]
+        if command is not None:
+            command(selection, self).execute()
 
 
 class Tile(object):
@@ -61,24 +66,6 @@ class Tile(object):
         self.unit = unit
 
 
-class Cursor(object):
-    def __init__(self, world_map: "Map"):
-        self.map = world_map
-        self.location = points.MapPoint(0, 0)
-        self.center()
-
-    def center(self):
-        """Center the cursor on the map."""
-        self.move_to(points.MapPoint(int(self.map.width / 2), int(self.map.height / 2)))
-
-    def move_direction(self, curr_input: user_input.Input):
-        pass  # todo
-
-    def move_to(self, point: points.MapPoint):
-        self.location = point
-        self.map.scroll_to_cursor()
-
-
 class Map(object):
     def __init__(self, world_setup: "WorldSetup"):
         self.world_setup = world_setup  # type: WorldSetup
@@ -88,10 +75,15 @@ class Map(object):
         self.size_point = points.ScreenPoint.from_tile(self.width, self.height)
         self.surface = graphics.make_surface(self.size_point.pixel)
 
-        self.cursor = Cursor(self)
+        self.cursor = cursor.Cursor(self)  # type: Cursor
 
-    def get_entities(self, layer: typing.Type["layers.Layer"], map_point: points.MapPoint) -> \
-            "entities.Entity":
+    def has_point(self, point: points.MapPoint):
+        if point.tile_x >= 0 and point.tile_y >= 0:
+            if point.tile_x < self.size_point.tile_x and point.tile_y < self.size_point.tile_y:
+                return True
+        return False
+
+    def get_entities(self, layer: typing.Type["layers.Layer"], map_point: points.MapPoint) -> "entities.Entity":
         if layer == layers.TerrainLayer:
             return self.get_terrain(map_point)
         elif layer == layers.BuildingLayer:
@@ -180,8 +172,39 @@ class ViewPort(object):
         self.end_point = NotImplemented  # type: points.ScreenPoint
         self._init_end_point()
 
-        self.map_start_point = points.MapPoint(0, 0)  # type: points.MapPoint
-        self.map_end_point = self.map_start_point + self.size_point  # type: points.MapPoint #todo zoom
+        self.map_start_point = points.MapPoint.from_tile(0, 0)  # type: points.MapPoint
+
+        self.SCROLL_BOUNDARY = 2
+
+    @property
+    def range_x(self):
+        return range(self.map_start_point.tile_x,
+                     self.map_start_point.tile_x + self.size_point.tile_x)
+
+    @property
+    def range_y(self):
+        return range(self.map_start_point.tile_y,
+                     self.map_start_point.tile_y + self.size_point.tile_y)
+
+    @property
+    def map_end_point(self):
+        return self.map_start_point + self.size_point
+
+    def scroll_one_tile(self, direction: directions.Direction):
+        if direction in self.get_scrollable_edges():
+            self.map_start_point = self.map_start_point + direction.point
+
+    def get_scrollable_edges(self):
+        scrollable_edges = []
+        if self.map_start_point.tile_x > 0:
+            scrollable_edges.append(directions.Left)
+        if self.map_start_point.tile_y > 0:
+            scrollable_edges.append(directions.Up)
+        if self.map_start_point.tile_x + self.size_point.tile_x < self.map.size_point.tile_x:
+            scrollable_edges.append(directions.Right)
+        if self.map_start_point.tile_y + self.size_point.tile_y < self.map.size_point.tile_y:
+            scrollable_edges.append(directions.Down)
+        return scrollable_edges
 
     def _init_size_point(self) -> points.ScreenPoint:
         size_tile_x = min(self.map.size_point.tile_x, graphics.SCREEN_TILE_WIDTH)
@@ -233,30 +256,34 @@ class MapDrawing(object):
         self.draw_map_surface()
 
     def draw_map_layer(self, layer: typing.Type[layers.Layer]):
-        for x in range(self.viewport.size_point.tile_x):
-            for y in range(self.viewport.size_point.tile_y):
-                map_point = points.MapPoint.from_tile(x, y)
-                self.draw_tile_layer(layer, map_point)
+        for screen_x, map_x in enumerate(self.viewport.range_x):
+            for screen_y, map_y in enumerate(self.viewport.range_y):
+                map_point = points.MapPoint.from_tile(map_x, map_y)
+                screen_point = points.ScreenPoint.from_tile(screen_x, screen_y)
+                self.draw_tile_layer(layer, map_point, screen_point)
 
-    def draw_tile_layer(self, layer: typing.Type[layers.Layer], map_point: points.MapPoint):
+    def draw_tile_layer(self, layer: typing.Type[layers.Layer], map_point: points.MapPoint,
+                        screen_point: points.ScreenPoint):
         entity = self.map.get_entities(layer, map_point)
-        self.draw_entity_if_not_null_entity(entity, map_point)
+        self.draw_entity_if_not_null_entity(entity, screen_point)
 
-    def draw_entity_if_not_null_entity(self, entity: "entities.Entity", map_point: points.MapPoint):
+    def draw_entity_if_not_null_entity(self, entity: "entities.Entity",
+                                       screen_point: points.ScreenPoint):
         try:
-            self._draw_entity_if_sprite_found(entity, map_point)
+            self._draw_entity_if_sprite_found(entity, screen_point)
         except sprites.DrawNullEntityException:
             pass
 
-    def _draw_entity_if_sprite_found(self, entity: "entities.Entity", map_point: points.MapPoint):
+    def _draw_entity_if_sprite_found(self, entity: "entities.Entity",
+                                     screen_point: points.ScreenPoint):
         sprite = entity.sprite
         if sprite:
-            self._draw_entity_sprite(sprite, map_point)
+            self._draw_entity_sprite(sprite, screen_point)
         else:
             raise sprites.MissingSpriteException
 
-    def _draw_entity_sprite(self, sprite: pygame.Surface, map_point: points.MapPoint):
-        self.map.surface.blit(sprite, map_point.pixel)
+    def _draw_entity_sprite(self, sprite: pygame.Surface, screen_point: points.ScreenPoint):
+        self.map.surface.blit(sprite, screen_point.pixel)
 
     def draw_map_surface(self):
         self.display.blit(self.map.surface, self.viewport.draw_point.pixel)
@@ -281,3 +308,31 @@ class MapDrawing(object):
             centered_y = int((graphics.MAP_TILE_HEIGHT - self.map.height) / 2 +
                              graphics.TOP_BAR_TILE_HEIGHT)
             return points.ScreenPoint.from_tile(centered_x, centered_y)
+
+    def scroll_to_cursor(self):
+        scrollable_edges = self.viewport.get_scrollable_edges()
+        for direction in scrollable_edges:
+            if self.is_cursor_in_scroll_area(direction):
+                self._scroll_to_cursor_in_boundary(direction)
+
+    def is_cursor_in_scroll_area(self, direction: directions.Direction):
+        if direction is directions.Right:
+            return self.map.cursor.location.tile_x > self.viewport.map_end_point.tile_x - self.viewport.SCROLL_BOUNDARY
+        elif direction is directions.Left:
+            return self.map.cursor.location.tile_x < self.viewport.map_start_point.tile_x + self.viewport.SCROLL_BOUNDARY
+        elif direction is directions.Up:
+            return self.map.cursor.location.tile_x < self.viewport.map_start_point.tile_x + self.viewport.SCROLL_BOUNDARY
+        elif direction is directions.Down:
+            return self.map.cursor.location.tile_y > self.viewport.map_end_point.tile_y - self.viewport.SCROLL_BOUNDARY
+        else:
+            raise ValueError("Bad direction given")
+
+    def is_cursor_out_of_viewport(self):
+        cursor_point = self.map.cursor.location
+        return cursor_point.tile_x in self.viewport.range_x \
+               and cursor_point.tile_y in self.viewport.range_y
+
+    def _scroll_to_cursor_in_boundary(self, direction: directions.Direction):
+        """If the cursor is off the boundary in the given direction, scroll until it is within the boundary."""
+        while self.is_cursor_in_scroll_area(direction):
+            self.viewport.scroll_one_tile(direction)
