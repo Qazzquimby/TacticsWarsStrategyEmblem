@@ -26,28 +26,28 @@ class MoveCursor(commands.Command):
 
 
 class MoveCursorRight(MoveCursor):
-    direction = directions.Right
+    direction = directions.RIGHT
 
     def __init__(self, target: "Cursor", content: "world_screen.MapAndUI"):
         MoveCursor.__init__(self, target, content)
 
 
 class MoveCursorLeft(MoveCursor):
-    direction = directions.Left
+    direction = directions.LEFT
 
     def __init__(self, target: "Cursor", content: "world_screen.MapAndUI"):
         MoveCursor.__init__(self, target, content)
 
 
 class MoveCursorUp(MoveCursor):
-    direction = directions.Up
+    direction = directions.UP
 
     def __init__(self, target: "Cursor", content: "world_screen.MapAndUI"):
         MoveCursor.__init__(self, target, content)
 
 
 class MoveCursorDown(MoveCursor):
-    direction = directions.Down
+    direction = directions.DOWN
 
     def __init__(self, target: "Cursor", content: "world_screen.MapAndUI"):
         MoveCursor.__init__(self, target, content)
@@ -60,11 +60,11 @@ class Cursor(object):
         # self.center()
 
     def receive_input(self, curr_input: user_input.Input):
-        if curr_input == user_input.Right:
+        if curr_input == user_input.RIGHT:
             return MoveCursorRight
-        elif curr_input == user_input.Left:
+        elif curr_input == user_input.LEFT:
             return MoveCursorLeft
-        elif curr_input == user_input.Up:
+        elif curr_input == user_input.UP:
             return MoveCursorUp
-        elif curr_input == user_input.Down:
+        elif curr_input == user_input.DOWN:
             return MoveCursorDown

@@ -1,4 +1,3 @@
-import abc
 import typing
 
 import pygame
@@ -9,9 +8,10 @@ KEY_UP = 1
 KEY_DOWN = 2
 
 
-class Input(abc.ABC):
-    _PRIORITY = None  # type: int
-    name = None  # type: str
+class Input(object):
+    def __init__(self, name: str, priority: int):
+        self.name = name  # type: str
+        self.priority = priority  # type: int
 
     def __lt__(self, other):
         return self.priority < other.priority
@@ -19,9 +19,14 @@ class Input(abc.ABC):
     def __eq__(self, other):
         return self.priority == other.priority
 
-    @property
-    def priority(self) -> int:
-        return self._PRIORITY
+
+QUIT = Input("quit", 0)
+CONFIRM = Input("confirm", 1)
+BACK = Input("back", 2)
+LEFT = Input("left", 3)
+UP = Input("up", 4)
+RIGHT = Input("right", 5)
+DOWN = Input("down", 6)
 
 
 class InputInterpreter(object):
@@ -52,7 +57,7 @@ class InputInterpreter(object):
             elif event.type == pygame.KEYUP:
                 curr_input = self.control_map.key_to_input((pygame.key.name(event.key), KEY_UP))
 
-            if callable(curr_input):
+            if curr_input is not None:
                 inputs.append(curr_input)
 
         return inputs
@@ -65,13 +70,13 @@ class ControlMap(object):
         """_input_dict maps ("keyname", isKeyUp) to an Input"""
 
         self._input_dict = {
-            ("x", 2): Confirm,
-            ("z", 2): Back,
-            ("q", 2): Quit,
-            ("left", 2): Left,
-            ("up", 2): Up,
-            ("right", 2): Right,
-            ("down", 2): Down,
+            ("x", 2): CONFIRM,
+            ("z", 2): BACK,
+            ("q", 2): QUIT,
+            ("left", 2): LEFT,
+            ("up", 2): UP,
+            ("right", 2): RIGHT,
+            ("down", 2): DOWN,
         }
 
     def key_to_input(self, key: (str, int)) -> typing.Optional[typing.Type[Input]]:
@@ -80,66 +85,3 @@ class ControlMap(object):
             return self._input_dict[key]
         except KeyError:
             return None
-
-
-class Quit(Input):
-    _PRIORITY = 0
-    name = "quit"
-
-    @property
-    def priority(self):
-        return self._PRIORITY
-
-
-class Confirm(Input):
-    _PRIORITY = 1
-    name = "confirm"
-
-    @property
-    def priority(self):
-        return self._PRIORITY
-
-
-class Back(Input):
-    _PRIORITY = 2
-    name = "back"
-
-    @property
-    def priority(self):
-        return self._PRIORITY
-
-
-class Left(Input):
-    _PRIORITY = 3
-    name = "left"
-
-    @property
-    def priority(self):
-        return self._PRIORITY
-
-
-class Up(Input):
-    _PRIORITY = 4
-    name = "up"
-
-    @property
-    def priority(self):
-        return self._PRIORITY
-
-
-class Right(Input):
-    _PRIORITY = 5
-    name = "right"
-
-    @property
-    def priority(self):
-        return self._PRIORITY
-
-
-class Down(Input):
-    _PRIORITY = 6
-    name = "down"
-
-    @property
-    def priority(self):
-        return self._PRIORITY

@@ -16,9 +16,9 @@ class Player(object):
 
     def _init_color(self):
         if self.player_number == 0:
-            return colors.Red
+            return colors.RED
         elif self.player_number == 1:
-            return colors.Blue
+            return colors.BLUE
         else:
             raise ValueError("Not built to handle that player number yet")
 

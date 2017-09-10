@@ -25,13 +25,13 @@ class Button(object):
         self.is_image = False
 
     def receive_input(self, curr_input: user_input.Input):
-        if isinstance(curr_input, user_input.Confirm):
+        if isinstance(curr_input, user_input.CONFIRM):
             self.confirm()
 
-        elif isinstance(curr_input, user_input.Up):
+        elif isinstance(curr_input, user_input.UP):
             self.menu.select_up()
 
-        elif isinstance(curr_input, user_input.Down):
+        elif isinstance(curr_input, user_input.DOWN):
             self.menu.select_down()
 
     def confirm(self):
@@ -63,19 +63,19 @@ class SelectionButton(Button):
         return self.selected_button.confirm
 
     def receive_input(self, curr_input: user_input.Input):
-        if curr_input == user_input.Confirm:
+        if curr_input == user_input.CONFIRM:
             self.confirm()
 
-        elif curr_input == user_input.Up:
+        elif curr_input == user_input.UP:
             self.menu.select_up()
 
-        elif curr_input == user_input.Down:
+        elif curr_input == user_input.DOWN:
             self.menu.select_down()
 
-        elif curr_input == user_input.Left:
+        elif curr_input == user_input.LEFT:
             self.left_choose_option()
 
-        elif curr_input == user_input.Right:
+        elif curr_input == user_input.RIGHT:
             self.right_choose_option()
 
     def left_choose_option(self):

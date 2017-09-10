@@ -1,10 +1,7 @@
 class ArmyColor(object):
-    name = NotImplemented
+    def __init__(self, name):
+        self.name = name
 
 
-class Red(ArmyColor):
-    name = "red"
-
-
-class Blue(ArmyColor):
-    name = "blue"
+RED = ArmyColor("red")
+BLUE = ArmyColor("blue")

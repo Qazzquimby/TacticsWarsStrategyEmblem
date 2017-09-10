@@ -1,47 +1,22 @@
 import abc
 
-from classproperty import classproperty
-from points import Point
+import points
 
 
 class Direction(abc.ABC):
-    point = NotImplemented
-
-    @classproperty
-    def opposite(self):
-        return NotImplementedError
+    def __init__(self, point: "points.Point"):
+        self.point = point
+        self.opposite = NotImplemented  # Must be set after creation :(
 
 
-class Left(Direction):
-    point = Point.from_tile(-1, 0)
+LEFT = Direction(points.Point.from_tile(-1, 0))
+RIGHT = Direction(points.Point.from_tile(1, 0))
+LEFT.opposite = RIGHT
+RIGHT.opposite = LEFT
 
-    @classproperty
-    def opposite(self):
-        return Right
+UP = Direction(points.Point.from_tile(0, -1))
+DOWN = Direction(points.Point.from_tile(0, 1))
+UP.opposite = DOWN
+DOWN.opposite = UP
 
-
-class Right(Direction):
-    point = Point.from_tile(1, 0)
-
-    @classproperty
-    def opposite(self):
-        return Left
-
-
-class Up(Direction):
-    point = Point.from_tile(0, -1)
-
-    @classproperty
-    def opposite(self):
-        return Down
-
-
-class Down(Direction):
-    point = Point.from_tile(0, 1)
-
-    @classproperty
-    def opposite(self):
-        return Up
-
-
-DIRECTIONS = [Left, Right, Up, Down]
+DIRECTIONS = [LEFT, RIGHT, UP, DOWN]

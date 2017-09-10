@@ -60,7 +60,7 @@ class Main(object):
 
         current_input = self.input_interpreter.interpret_input()
         if current_input is not None:
-            if isinstance(current_input, user_input.Quit):
+            if current_input == user_input.QUIT:
                 self.session.quit_game()
         self.screen_engine.execute_tick(current_input)
         self.display.execute_tick()

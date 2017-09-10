@@ -98,9 +98,9 @@ class OwnedEntity(Entity, abc.ABC):
     @property
     def animation(self):
         color = self.player.color
-        if color == colors.Red:
+        if color == colors.RED:
             return self._animation_red
-        elif color == colors.Blue:
+        elif color == colors.BLUE:
             return self._animation_blue
         else:
             raise ValueError

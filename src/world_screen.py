@@ -75,7 +75,7 @@ class Map(object):
         self.size_point = points.ScreenPoint.from_tile(self.width, self.height)
         self.surface = graphics.make_surface(self.size_point.pixel)
 
-        self.cursor = cursor.Cursor(self)  # type: Cursor
+        self.cursor = cursor.Cursor(self)  # type: cursor.Cursor
 
     def has_point(self, point: points.MapPoint):
         if point.tile_x >= 0 and point.tile_y >= 0:
@@ -197,13 +197,13 @@ class ViewPort(object):
     def get_scrollable_edges(self):
         scrollable_edges = []
         if self.map_start_point.tile_x > 0:
-            scrollable_edges.append(directions.Left)
+            scrollable_edges.append(directions.LEFT)
         if self.map_start_point.tile_y > 0:
-            scrollable_edges.append(directions.Up)
+            scrollable_edges.append(directions.UP)
         if self.map_start_point.tile_x + self.size_point.tile_x < self.map.size_point.tile_x:
-            scrollable_edges.append(directions.Right)
+            scrollable_edges.append(directions.RIGHT)
         if self.map_start_point.tile_y + self.size_point.tile_y < self.map.size_point.tile_y:
-            scrollable_edges.append(directions.Down)
+            scrollable_edges.append(directions.DOWN)
         return scrollable_edges
 
     def _init_size_point(self) -> points.ScreenPoint:
@@ -316,13 +316,13 @@ class MapDrawing(object):
                 self._scroll_to_cursor_in_boundary(direction)
 
     def is_cursor_in_scroll_area(self, direction: directions.Direction):
-        if direction is directions.Right:
+        if direction is directions.RIGHT:
             return self.map.cursor.location.tile_x > self.viewport.map_end_point.tile_x - self.viewport.SCROLL_BOUNDARY
-        elif direction is directions.Left:
+        elif direction is directions.LEFT:
             return self.map.cursor.location.tile_x < self.viewport.map_start_point.tile_x + self.viewport.SCROLL_BOUNDARY
-        elif direction is directions.Up:
+        elif direction is directions.UP:
             return self.map.cursor.location.tile_x < self.viewport.map_start_point.tile_x + self.viewport.SCROLL_BOUNDARY
-        elif direction is directions.Down:
+        elif direction is directions.DOWN:
             return self.map.cursor.location.tile_y > self.viewport.map_end_point.tile_y - self.viewport.SCROLL_BOUNDARY
         else:
             raise ValueError("Bad direction given")

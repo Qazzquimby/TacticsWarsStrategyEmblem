@@ -50,7 +50,7 @@ class Point(abc.ABC):
         pixel = self.pixel
         return pixel[1]
 
-    def directed_neighbour(self, direction: "Direction"):
+    def directed_neighbour(self, direction):
         starting_point = Point(self.pixel_x, self.pixel_y)
         return starting_point + direction.point
 
