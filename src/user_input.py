@@ -1,4 +1,5 @@
 import typing
+from collections import OrderedDict
 
 import pygame
 
@@ -87,9 +88,10 @@ class InputInterpreter(object):
         for lift in lifts:
             assert lift in HELD_INPUT_LIFTS
             print("lift", lift.name)
-            if self.lift_action_to_push_action(lift) in self.held_keys:
+            push_action = self.lift_action_to_push_action(lift)
+            if push_action in self.held_keys:
                 print("LIFTED")
-                self.held_keys.remove(lift)
+                self.held_keys.remove(push_action)
 
     def lift_action_to_push_action(self, lift):
         lifted = HELD_INPUTS[HELD_INPUT_LIFTS.index(lift)]
@@ -100,15 +102,20 @@ class InputInterpreter(object):
             priority_input = min(inputs)
             if priority_input in HELD_INPUTS:
                 self.held_keys.append(priority_input)
-                self.held_keys = list(set(self.held_keys))
+                self.held_keys = list(OrderedDict.fromkeys(self.held_keys))  # deduplicate
 
-            print([curr_input.name for curr_input in inputs], priority_input, self.held_keys)
+            print([curr_input.name for curr_input in inputs], priority_input,
+                  [curr_input.name for curr_input in self.held_keys])
             return priority_input
         else:
-            try:
-                return self.held_keys[-1]
-            except IndexError:
-                return None
+            return self.held_key_input()
+
+    def held_key_input(self):
+        # todo improve cursor movement
+        try:
+            return self.held_keys[-1]
+        except IndexError:
+            return None
 
 
 class ControlMap(object):

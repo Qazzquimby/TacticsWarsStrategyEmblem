@@ -44,7 +44,6 @@ class MapAndUI(object):
         self.selection = None  # Entity currently being manipulated
 
     def receive_input(self, curr_input: user_input.Input):
-        # todo: cursor selection, unit-menu, unit-cursor
         selection = self.selection
         if selection is None:
             selection = self.map.cursor
@@ -118,12 +117,6 @@ class Map(object):
     @property
     def height(self) -> int:
         return len(self._map[0])
-
-    def scroll_to_cursor(self):
-        pass  # todo
-
-    def scroll_to_point(self, point):
-        """"""
 
     def _init_map(self, entity_seed_array: list):
         world_map = []
