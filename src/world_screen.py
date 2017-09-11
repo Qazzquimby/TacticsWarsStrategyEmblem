@@ -146,14 +146,12 @@ class Map(object):
 
 class TopBar(object):
     def __init__(self):
-        self.surface = sprites.SpriteAnimation("",
-                                               "sprites/top_bar").sprite_sheet.original_sprite_sheet_surface
+        self.surface = sprites.SpriteAnimation("", "sprites/top_bar").sprite_sheet.original_sprite_sheet_surface
 
 
 class WorldMenu(object):
     def __init__(self):
-        self.surface = sprites.SpriteAnimation("",
-                                               "sprites/world_menu").sprite_sheet.original_sprite_sheet_surface
+        self.surface = sprites.SpriteAnimation("", "sprites/world_menu").sprite_sheet.original_sprite_sheet_surface
 
 
 class ViewPort(object):
@@ -253,6 +251,7 @@ class MapDrawing(object):
     def draw_map(self):
         for layer in [layers.TerrainLayer, layers.BuildingLayer, layers.UnitLayer]:
             self.draw_map_layer(layer)
+        self.draw_cursor()
         self.draw_map_surface()
 
     def draw_map_layer(self, layer: typing.Type[layers.Layer]):
@@ -284,6 +283,9 @@ class MapDrawing(object):
 
     def _draw_entity_sprite(self, sprite: pygame.Surface, screen_point: points.ScreenPoint):
         self.map.surface.blit(sprite, screen_point.pixel)
+
+    def draw_cursor(self):
+        self.map.surface.blit(self.map.cursor.sprite, (self.map.cursor.location - self.viewport.map_start_point).pixel)
 
     def draw_map_surface(self):
         self.display.blit(self.map.surface, self.viewport.draw_point.pixel)
@@ -317,13 +319,13 @@ class MapDrawing(object):
 
     def is_cursor_in_scroll_area(self, direction: directions.Direction):
         if direction is directions.RIGHT:
-            return self.map.cursor.location.tile_x > self.viewport.map_end_point.tile_x - self.viewport.SCROLL_BOUNDARY
+            return self.map.cursor.location.tile_x >= self.viewport.map_end_point.tile_x - self.viewport.SCROLL_BOUNDARY
         elif direction is directions.LEFT:
-            return self.map.cursor.location.tile_x < self.viewport.map_start_point.tile_x + self.viewport.SCROLL_BOUNDARY
+            return self.map.cursor.location.tile_x <= self.viewport.map_start_point.tile_x + self.viewport.SCROLL_BOUNDARY
         elif direction is directions.UP:
-            return self.map.cursor.location.tile_x < self.viewport.map_start_point.tile_x + self.viewport.SCROLL_BOUNDARY
+            return self.map.cursor.location.tile_x <= self.viewport.map_start_point.tile_x + self.viewport.SCROLL_BOUNDARY
         elif direction is directions.DOWN:
-            return self.map.cursor.location.tile_y > self.viewport.map_end_point.tile_y - self.viewport.SCROLL_BOUNDARY
+            return self.map.cursor.location.tile_y >= self.viewport.map_end_point.tile_y - self.viewport.SCROLL_BOUNDARY
         else:
             raise ValueError("Bad direction given")
 

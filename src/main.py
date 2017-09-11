@@ -8,7 +8,7 @@ import screens
 import sessionmod
 import user_input
 
-FPS = 30
+FPS = 15
 PROFILE = False  # Keep profiler metrics each frame
 
 
@@ -17,7 +17,7 @@ class Clock(object):
         self.pygame_clock = pygame.time.Clock()
 
     def wait_for_next_tick(self):
-        self.pygame_clock.tick(self.ms_per_frame)
+        self.pygame_clock.tick(FPS)
 
     @property
     def ms_per_frame(self):

@@ -57,6 +57,9 @@ class Point(abc.ABC):
     def __add__(self, other):
         return Point(self.pixel_x + other.pixel_x, self.pixel_y + other.pixel_y)
 
+    def __sub__(self, other):
+        return Point(self.pixel_x - other.pixel_x, self.pixel_y - other.pixel_y)
+
 
 class ScreenPoint(Point):
     """Coordinate on the screen"""

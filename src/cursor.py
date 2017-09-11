@@ -1,6 +1,7 @@
 import commands
 import directions
 import points
+import sprites
 import user_input
 import world_screen
 
@@ -57,7 +58,7 @@ class Cursor(object):
     def __init__(self, world_map: "world_screen.Map"):
         self.map = world_map
         self.location = points.MapPoint(0, 0)
-        # self.center()
+        self.sprite = sprites.SpriteAnimation("", "sprites/cursor").sprite
 
     def receive_input(self, curr_input: user_input.Input):
         if curr_input == user_input.RIGHT:

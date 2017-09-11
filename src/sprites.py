@@ -19,8 +19,13 @@ class SpriteAnimation(object):
 
         self.sprite_sheet = SpriteSheet(sprite_location, file_name)
         self.sprite_list = self.sprite_sheet.sprite_list  # type: list
-        self._current_sprite_index = random.randrange(0, len(self.sprite_list) - 1)
-        self._time_spent_at_index = random.randrange(0, graphics.ANIMATION_FRAME_LENGTH - 1)
+
+        try:
+            self._current_sprite_index = random.randrange(0, len(self.sprite_list) - 1)
+        except ValueError:
+            self._current_sprite_index = 0
+
+        self._time_spent_at_index = random.randrange(0, self.animation_frame_length - 1)
 
     @property
     def sprite(self) -> pygame.Surface:
