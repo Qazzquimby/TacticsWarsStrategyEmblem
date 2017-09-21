@@ -135,24 +135,34 @@ class InputRepeater(object):
         self.input_interpreter = input_interpreter
         self.current_hold_time = 0
         self.hold_time_before_roll = 8
+        self.hold_time_per_roll = 2
         self.held_key = None
 
     @property
     def input(self):
         if self.input_interpreter.held_key == self.held_key:
-            print(self.current_hold_time)
-            if self.current_hold_time < self.hold_time_before_roll:
-                self.current_hold_time += 1
-                return None
-            else:
-                return self.roll()
+            return self._repeat_input()
         else:
-            self.held_key = self.input_interpreter.held_key
-            self.current_hold_time = 0
-            return self.input
+            return self._change_key()
 
-    def roll(self):
-        return self.held_key  # todo, slow to once per couple frames
+    def _repeat_input(self):
+        if self.current_hold_time < self.hold_time_before_roll:
+            curr_input = None
+        else:
+            curr_input = self._roll()
+        self.current_hold_time += 1
+        return curr_input
+
+    def _change_key(self):
+        self.held_key = self.input_interpreter.held_key
+        self.current_hold_time = 0
+        return self.input
+
+    def _roll(self):
+        if self.current_hold_time % self.hold_time_per_roll == 0:
+            return self.held_key
+        else:
+            return None
 
 
 

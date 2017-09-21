@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="720812d0-50dc-4d5c-bcee-ad184f39bae6" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/menus.py" afterPath="$PROJECT_DIR$/src/menus.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/user_input.py" afterPath="$PROJECT_DIR$/src/user_input.py" />
     </list>
     <ignored path="TacticsWarsStrategyEmblem.iws" />
@@ -92,8 +91,8 @@
       <file leaf-file-name="user_input.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/user_input.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="107" column="51" lean-forward="false" selection-start-line="107" selection-start-column="51" selection-end-line="107" selection-end-column="51" />
+            <state relative-caret-position="418">
+              <caret line="161" column="33" lean-forward="false" selection-start-line="161" selection-start-column="33" selection-end-line="161" selection-end-column="33" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
                 <element signature="e#1814#2425#0" expanded="false" />
@@ -107,9 +106,7 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="323">
               <caret line="80" column="43" lean-forward="true" selection-start-line="80" selection-start-column="43" selection-end-line="80" selection-end-column="43" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -863,7 +860,14 @@
       <option name="project" value="LOCAL" />
       <updated>1505110197759</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Rolling now begins after small wait">
+      <created>1505982468616</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1505982468616</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -963,7 +967,8 @@
     <MESSAGE value="Constants that use to be subclasses are now constant instances." />
     <MESSAGE value="Fixed frame rate issue&#10;&#10;Cursor is now drawn to screen&#10;&#10;Held movement keys repeat the input, currently once per frame." />
     <MESSAGE value="Improved movement rolling controls." />
-    <option name="LAST_COMMIT_MESSAGE" value="Improved movement rolling controls." />
+    <MESSAGE value="Rolling now begins after small wait" />
+    <option name="LAST_COMMIT_MESSAGE" value="Rolling now begins after small wait" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -1317,9 +1322,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
           <caret line="80" column="43" lean-forward="true" selection-start-line="80" selection-start-column="43" selection-end-line="80" selection-end-column="43" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1352,8 +1355,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/user_input.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="107" column="51" lean-forward="false" selection-start-line="107" selection-start-column="51" selection-end-line="107" selection-end-column="51" />
+        <state relative-caret-position="418">
+          <caret line="161" column="33" lean-forward="false" selection-start-line="161" selection-start-column="33" selection-end-line="161" selection-end-column="33" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
             <element signature="e#1814#2425#0" expanded="false" />
