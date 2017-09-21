@@ -53,6 +53,7 @@ class InputInterpreter(object):
     def __init__(self):
         self.control_map = ControlMap()
         self.held_keys = []
+        self.input_repeater = InputRepeater(self)
 
     def interpret_input(self) -> typing.Optional[Input]:
         """Returns the action to be performed this frame.
@@ -99,23 +100,60 @@ class InputInterpreter(object):
 
     def process_inputs(self, inputs):
         if inputs:
-            priority_input = min(inputs)
-            if priority_input in HELD_INPUTS:
-                self.held_keys.append(priority_input)
-                self.held_keys = list(OrderedDict.fromkeys(self.held_keys))  # deduplicate
-
-            print([curr_input.name for curr_input in inputs], priority_input,
-                  [curr_input.name for curr_input in self.held_keys])
-            return priority_input
+            return self._process_new_inputs(inputs)
         else:
-            return self.held_key_input()
+            if self.held_key:
+                return self._held_key_input()
+            else:
+                self.input_repeater.held_key = None
+                return None
 
-    def held_key_input(self):
-        # todo improve cursor movement
+    def _process_new_inputs(self, inputs):
+        priority_input = min(inputs)
+        if priority_input in HELD_INPUTS:
+            self._hold_key(priority_input)
+        return priority_input
+
+    def _hold_key(self, key):
+        self.held_keys.append(key)
+        self.held_keys = list(OrderedDict.fromkeys(self.held_keys))  # deduplicate
+
+    @property
+    def held_key(self):
         try:
             return self.held_keys[-1]
         except IndexError:
             return None
+
+    def _held_key_input(self):
+        # todo improve cursor movement
+        return self.input_repeater.input
+
+
+class InputRepeater(object):
+    def __init__(self, input_interpreter: InputInterpreter):
+        self.input_interpreter = input_interpreter
+        self.current_hold_time = 0
+        self.hold_time_before_roll = 8
+        self.held_key = None
+
+    @property
+    def input(self):
+        if self.input_interpreter.held_key == self.held_key:
+            print(self.current_hold_time)
+            if self.current_hold_time < self.hold_time_before_roll:
+                self.current_hold_time += 1
+                return None
+            else:
+                return self.roll()
+        else:
+            self.held_key = self.input_interpreter.held_key
+            self.current_hold_time = 0
+            return self.input
+
+    def roll(self):
+        return self.held_key  # todo, slow to once per couple frames
+
 
 
 class ControlMap(object):

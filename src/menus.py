@@ -25,17 +25,35 @@ class Button(object):
         self.is_image = False
 
     def receive_input(self, curr_input: user_input.Input):
-        if isinstance(curr_input, user_input.CONFIRM):
+        if curr_input == user_input.CONFIRM:
             self.confirm()
 
-        elif isinstance(curr_input, user_input.UP):
-            self.menu.select_up()
+        elif curr_input == user_input.UP:
+            self.up()
 
-        elif isinstance(curr_input, user_input.DOWN):
-            self.menu.select_down()
+        elif curr_input == user_input.DOWN:
+            self.down()
+
+        elif curr_input == user_input.LEFT:
+            self.left()
+
+        elif curr_input == user_input.RIGHT:
+            self.right()
 
     def confirm(self):
         pass  # May be overwritten in init
+
+    def up(self):
+        self.menu.select_up()
+
+    def down(self):
+        self.menu.select_down()
+
+    def right(self):
+        pass
+
+    def left(self):
+        pass
 
 
 class SelectionButton(Button):
@@ -62,27 +80,11 @@ class SelectionButton(Button):
     def confirm(self):
         return self.selected_button.confirm
 
-    def receive_input(self, curr_input: user_input.Input):
-        if curr_input == user_input.CONFIRM:
-            self.confirm()
-
-        elif curr_input == user_input.UP:
-            self.menu.select_up()
-
-        elif curr_input == user_input.DOWN:
-            self.menu.select_down()
-
-        elif curr_input == user_input.LEFT:
-            self.left_choose_option()
-
-        elif curr_input == user_input.RIGHT:
-            self.right_choose_option()
-
-    def left_choose_option(self):
+    def left(self):
         self.selection = (self.selection - 1) % len(self.button_list)
         self.menu.rewrite_buttons()
 
-    def right_choose_option(self):
+    def right(self):
         self.selection = (self.selection + 1) % len(self.button_list)
         self.menu.rewrite_buttons()
 
