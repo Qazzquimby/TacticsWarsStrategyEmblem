@@ -1,18 +1,68 @@
+# MIT License
+# Copyright (c) 2018 Toren James Darby
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+"""Classes related to receiving and interpreting user input
+
+Attributes:
+    KEY_UP (int):  A simple enumeration for lifting a key.
+    KEY_DOWN (int):  A simple enumeration for pressing a key.
+
+    QUIT (Input): An input to immediately quit the game. Temporary.
+    CONFIRM (Input): An input to confirm or make a _selection.
+    BACK (Input): An input to back out of the current _selection.
+    LEFT (Input): An input to move left.
+    UP (Input): An input to move up.
+    RIGHT (Input): An input to move right.
+    DOWN (Input): An input to move down.
+
+    STOP_LEFT (Input): An input to stop moving left.
+    STOP_UP (Input): An input to stop moving up.
+    STOP_RIGHT (Input): An input to stop moving right.
+    STOP_DOWN (Input): An input to stop moving down.
+
+    HELD_INPUTS (List[Input]): A list of inputs which can be held.
+    HELD_INPUT_LIFTS (List[Input]): A list of inputs which terminate held inputs.
+"""
+
 import typing
 from collections import OrderedDict
 
 import pygame
-
-"""Classes related to receiving and interpreting user input"""
 
 KEY_UP = 1
 KEY_DOWN = 2
 
 
 class Input(object):
-    def __init__(self, name: str, priority: int):
-        self.name = name  # type: str
-        self.priority = priority  # type: int
+    """An input that the game can understand. Not all keys are necessarily mapped to inputs.
+
+    Attributes:
+        self.name (str): The name of the input, for debugging.
+        self.priority (int): Used for comparing inputs. Lower priorities overwrite higher
+        priorities in the same frame.
+    """
+
+    def __init__(self, name, priority):
+        self.name = name
+        self.priority = priority
 
     def __str__(self):
         return self.name
@@ -48,12 +98,25 @@ HELD_INPUT_LIFTS = [STOP_LEFT, STOP_UP, STOP_RIGHT, STOP_DOWN]
 
 
 class InputInterpreter(object):
-    """Handles converting all key changes to a single action"""
+    """Handles converting all key changes to a single action
+    Attributes:
+          self.control_map (ControlMap): Routes key presses to Inputs.
+          self.held_keys (list[Input]): All keys currently held.
+          self.input_repeater (InputRepeater): Handles input from held keys.
+    """
 
     def __init__(self):
         self.control_map = ControlMap()
         self.held_keys = []
         self.input_repeater = InputRepeater(self)
+
+    @property
+    def held_key(self):
+        """Input: The most recent key to be held."""
+        try:
+            return self.held_keys[-1]
+        except IndexError:
+            return None
 
     def interpret_input(self) -> typing.Optional[Input]:
         """Returns the action to be performed this frame.
@@ -68,17 +131,25 @@ class InputInterpreter(object):
         self.process_lifts(lifts)
         return curr_input
 
-    def _get_inputs(self) -> typing.List[Input]:
-        """Maps this frame's key presses and lifts to their Inputs"""
+    def _get_inputs(self):
+        """Maps this frame's key presses and lifts to their Inputs
+
+        For each keypress, determine if it maps to an input or lift, and return lists of all
+        inputs and lifts found.
+
+        Returns:
+            inputs (list[Input]): All mapped inputs found.
+            lifts (list[Input]): All mapped lifts found.
+        """
         inputs = []
         lifts = []
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:  # pylint: disable=no-member
                 curr_input = self.control_map.key_to_input((pygame.key.name(event.key), KEY_DOWN))
                 if curr_input:
                     inputs.append(curr_input)
 
-            elif event.type == pygame.KEYUP:
+            elif event.type == pygame.KEYUP:  # pylint: disable=no-member
                 curr_input = self.control_map.key_to_input((pygame.key.name(event.key), KEY_UP))
                 if curr_input:
                     lifts.append(curr_input)
@@ -86,6 +157,11 @@ class InputInterpreter(object):
         return inputs, lifts
 
     def process_lifts(self, lifts):
+        """For each lift, terminate their corresponding held key if it is active.
+
+        Args:
+            lifts (typing.List[Lift]): All lifts to process.
+        """
         for lift in lifts:
             assert lift in HELD_INPUT_LIFTS
             print("lift", lift.name)
@@ -94,11 +170,28 @@ class InputInterpreter(object):
                 print("LIFTED")
                 self.held_keys.remove(push_action)
 
-    def lift_action_to_push_action(self, lift):
+    @staticmethod
+    def lift_action_to_push_action(lift):
+        """Get the corresponding keypress from a lift.
+
+        Args:
+            lift (Input): The lift to map.
+
+        Returns:
+            Input: The resulting keypress.
+        """
         lifted = HELD_INPUTS[HELD_INPUT_LIFTS.index(lift)]
         return lifted
 
     def process_inputs(self, inputs):
+        """Overwrites held keys with new key presses, or sustains the key.
+
+        Args:
+            inputs (typing.List[Input]): The inputs to process.
+
+        Returns:
+            The single input to use this frame.
+        """
         if inputs:
             return self._process_new_inputs(inputs)
         else:
@@ -118,20 +211,25 @@ class InputInterpreter(object):
         self.held_keys.append(key)
         self.held_keys = list(OrderedDict.fromkeys(self.held_keys))  # deduplicate
 
-    @property
-    def held_key(self):
-        try:
-            return self.held_keys[-1]
-        except IndexError:
-            return None
-
     def _held_key_input(self):
         # todo improve cursor movement
         return self.input_repeater.input
 
 
 class InputRepeater(object):
-    def __init__(self, input_interpreter: InputInterpreter):
+    """Handles repeating input from held keys.
+
+    Attributes:
+        self.input_interpreter (InputInterpreter): Gives access to input interpretation functions.
+        self.current_hold_time (int): The number of frames the key has currently been held.
+        self.hold_time_before_roll (int): The number of frames a key must be held before it will
+        repeat its action.
+        self.hold_time_per_roll (int): The number of frames a key must be held before it will
+        repeat its action after it has already repeated at least once.
+        self.held_key (Input): The key which is being held.
+    """
+
+    def __init__(self, input_interpreter):
         self.input_interpreter = input_interpreter
         self.current_hold_time = 0
         self.hold_time_before_roll = 8
@@ -140,6 +238,7 @@ class InputRepeater(object):
 
     @property
     def input(self):
+        """Input: The currently held key."""
         if self.input_interpreter.held_key == self.held_key:
             return self._repeat_input()
         else:
@@ -163,7 +262,6 @@ class InputRepeater(object):
             return self.held_key
         else:
             return None
-
 
 
 class ControlMap(object):

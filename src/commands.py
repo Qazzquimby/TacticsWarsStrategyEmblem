@@ -1,12 +1,43 @@
-import abc
+# MIT License
+# Copyright (c) 2018 Toren James Darby
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
-import world_screen
+"""This holds the command object"""
+
+import abc
 
 
 class Command(abc.ABC):
-    def __init__(self, target, content: "world_screen.MapAndUI"):
+    """Actions turned into objects for storage and reuse.
+
+    Attributes:
+        self.target (any): The object to perform the function on.
+        self.content (world_screen.MapAndUI): The world the action is being executed on,
+        for context.
+
+    """
+
+    def __init__(self, target, content):
         self.target = target
         self.content = content
 
     def execute(self):
+        """Performs the command's function."""
         raise NotImplementedError

@@ -2,13 +2,13 @@ from unittest import TestCase
 
 import graphics
 import screens
-import sessionmod
+import session
 
 
 class TestScreenEngine(TestCase):
     def setUp(self):
         self.display = graphics.Display()
-        self.session = sessionmod.Session()
+        self.session = session.Session()
         self.state_engine = screens.ScreenEngine(self.display, self.session)
 
     def test_len_after_one_push(self):

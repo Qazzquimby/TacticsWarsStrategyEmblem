@@ -19,19 +19,32 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Holds color objects and constants."""
+"""Global settings and constants hidden from the user."""
+
+import enum
 
 
-class ArmyColor(object):
-    """A color of an army.
+class Session(object):
+    """Global settings and constants hidden from the user."""
 
-    Attributes:
-        self.name (str): The name of the color.
-    """
+    def __init__(self):
+        """Holds widely used game variables"""
 
-    def __init__(self, name):
-        self.name = name
+        self._game_running = True
+        self._connection_mode = None
 
+        class ConnectionModes(enum.Enum):
+            """Methods through which players can connect to each other."""
+            hot_seat = enum.auto()
+            online = enum.auto()
 
-RED = ArmyColor("red")
-BLUE = ArmyColor("blue")
+        self.connection_modes = ConnectionModes
+
+    @property
+    def game_running(self):
+        """bool: If the game is still running. Checked each frame."""
+        return self._game_running
+
+    def quit_game(self):
+        """Set the game to stop running."""
+        self._game_running = False

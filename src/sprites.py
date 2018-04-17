@@ -1,3 +1,26 @@
+# MIT License
+# Copyright (c) 2018 Toren James Darby
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+"""Classes related to images and animation."""
+
 import random
 import typing
 
@@ -8,14 +31,21 @@ import points
 
 
 class SpriteAnimation(object):
+    """A wrapper on a series of sprites and optional timing values to allow looping animation.
+
+    Attributes:
+        self.animation_frame_length (int): The number of frames for which each sprite in the
+        animation will be displayed.
+        self.sprite_sheet (SpriteSheet): A sprite sheet object holding the sprites to animate.
+        self.sprite_list (list(pygame.Surface)): A list of the sprites in the sprite sheet.
+    """
+
     def __init__(self,
-                 sprite_location: str,
-                 file_name: str,
-                 animation_frame_length: typing.Optional[int] = None):
+                 sprite_location, file_name, animation_frame_length=None):
 
         self.animation_frame_length = animation_frame_length
         if self.animation_frame_length is None:
-            self.animation_frame_length = graphics.ANIMATION_FRAME_LENGTH  # type: int
+            self.animation_frame_length = graphics.DEFAULT_ANIMATION_FRAME_LENGTH  # type: int
 
         self.sprite_sheet = SpriteSheet(sprite_location, file_name)
         self.sprite_list = self.sprite_sheet.sprite_list  # type: list
@@ -28,7 +58,8 @@ class SpriteAnimation(object):
         self._time_spent_at_index = random.randrange(0, self.animation_frame_length - 1)
 
     @property
-    def sprite(self) -> pygame.Surface:
+    def sprite(self):
+        """pygame.Surface: The current sprite to display."""
         sprite = self.sprite_list[self._current_sprite_index]
         self._animate()
         return sprite
@@ -39,8 +70,8 @@ class SpriteAnimation(object):
 
     def _increment_time_spent(self):
         try:
-            self._time_spent_at_index = (
-                                            self._time_spent_at_index + 1) % self.animation_frame_length
+            next_time_at_index = self._time_spent_at_index + 1
+            self._time_spent_at_index = next_time_at_index % self.animation_frame_length
         except ZeroDivisionError:
             raise ValueError("sprite animation given frame length of 0")
 
@@ -50,22 +81,33 @@ class SpriteAnimation(object):
 
 
 class SpriteSheet(object):
-    def __init__(self, sprite_location: str, file_name: str):
+    """A surface containing sprites to be animated.
+
+    Attributes:
+        self.original_sprite_sheet_surface (pygame.Surface): The original image the sprites are
+        pulled from.
+        self.sheet_tile_width (int): The width of the sprite sheet in tiles.
+        self.sheet_tile_height (int): The height of the sprite sheet in tiles.
+    """
+
+    def __init__(self, sprite_location, file_name):
         self.original_sprite_sheet_surface = self._load_sprite_sheet(sprite_location,
-                                                                     file_name)  # type: pygame.Surface
-        self.sheet_tile_width = self._get_tile_width()  # type: int
-        self.sheet_tile_height = self._get_tile_height()  # type: int
+                                                                     file_name)
+        self.sheet_tile_width = self._get_tile_width()
+        self.sheet_tile_height = self._get_tile_height()
         self._trim_sprite_sheet()
-        self._sprite_list = self._make_sprite_list()  # type: typing.List[pygame.Surface]
+        self._sprite_list = self._make_sprite_list()
 
     @property
     def sprite_list(self) -> typing.List[pygame.Surface]:
+        """List[pygame.Surface]: The sprites, in animation order."""
         return self._sprite_list
 
-    def _load_sprite_sheet(self, sprite_location: str, file_name: str):
+    @staticmethod
+    def _load_sprite_sheet(sprite_location: str, file_name: str):
         converted_file_name = "../" + sprite_location + file_name + ".png"
         sprite_sheet = pygame.image.load(converted_file_name).convert()  # type: pygame.Surface
-        sprite_sheet.set_colorkey((255, 0, 255), pygame.RLEACCEL)
+        sprite_sheet.set_colorkey((255, 0, 255), pygame.RLEACCEL)  # pylint: disable=no-member
         return sprite_sheet
 
     def _get_tile_height(self) -> int:
@@ -143,8 +185,10 @@ class SpriteSheet(object):
 
 
 class MissingSpriteException(Exception):
+    """Thrown when a sprite is requested that does not exist."""
     pass
 
 
 class DrawNullEntityException(Exception):
+    """Thrown when a Null Entity is drawn."""
     pass
