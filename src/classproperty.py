@@ -29,5 +29,6 @@ class classproperty(object):  # pylint:disable=invalid-name
     def __init__(self, method):
         self.method = classmethod(method)
 
+    # noinspection PyUnresolvedReferences
     def __get__(self, *a):
         return self.method.__get__(*a)()

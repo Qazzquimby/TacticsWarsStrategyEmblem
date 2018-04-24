@@ -136,6 +136,7 @@ class SelectionButton(Button):
         self.menu.rewrite_buttons()
 
 
+# noinspection PyArgumentList
 class Menu(object):  # pylint: disable=too-many-instance-attributes
     """A collection of buttons with functionality to display them.
 

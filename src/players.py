@@ -59,5 +59,15 @@ class PlayerManager(object):
 
     def __init__(self, number_of_players):
         self.player_list = []
+        self.current_player_index = 0
         for i in range(number_of_players):
             self.player_list.append(Player(i))
+
+    @property
+    def current_player(self):
+        """Player: The currently active player."""
+        return self.player_list[self.current_player_index]
+
+    def advance_player(self):
+        """Increments the current player index to the next active player."""
+        self.current_player_index = (self.current_player_index + 1) % len(self.player_list)

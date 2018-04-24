@@ -40,8 +40,7 @@ class SpriteAnimation(object):
         self.sprite_list (list(pygame.Surface)): A list of the sprites in the sprite sheet.
     """
 
-    def __init__(self,
-                 sprite_location, file_name, animation_frame_length=None):
+    def __init__(self, sprite_location, file_name, animation_frame_length=None):
 
         self.animation_frame_length = animation_frame_length
         if self.animation_frame_length is None:

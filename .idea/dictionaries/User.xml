@@ -3,11 +3,15 @@
     <words>
       <w>blit</w>
       <w>classmethod</w>
+      <w>classproperty</w>
       <w>dest</w>
       <w>noninfringement</w>
       <w>pylint</w>
+      <w>rects</w>
       <w>toren</w>
+      <w>uninit</w>
       <w>uninitializes</w>
+      <w>yapsy</w>
     </words>
   </dictionary>
 </component>

@@ -32,10 +32,20 @@ import user_input
 class MoveCursor(commands.Command, abc.ABC):
     """A an abstract command for moving the cursor to arbitrary points. Children specify which
     direction to move."""
-    direction = NotImplemented
 
     def __init__(self, target, content):
         commands.Command.__init__(self, target, content)
+
+    def execute(self):
+        """Moves the cursor in the given direction."""
+        new_tile = self.target.location.directed_neighbour(self.direction)
+        if self.content.map.has_point(new_tile):
+            self._move_to(new_tile)
+
+    @abc.abstractmethod
+    def direction(self):
+        """points.MapPoint: The point to move in."""
+        return
 
     def _move_to(self, point):
         """Moves the cursor to a given map point.
@@ -51,43 +61,66 @@ class MoveCursor(commands.Command, abc.ABC):
         self._move_to(points.MapPoint(int(self.content.map.width / 2),
                                       int(self.content.map.height / 2)))
 
-    def execute(self):
-        """Moves the cursor in the given direction."""
-        new_tile = self.target.location.directed_neighbour(self.direction)
-        if self.content.map.has_point(new_tile):
-            self._move_to(new_tile)
-
 
 class MoveCursorRight(MoveCursor):
     """Moves the cursor one space to the right."""
-    direction = directions.RIGHT
 
     def __init__(self, target, content):
         MoveCursor.__init__(self, target, content)
+
+    @property
+    def direction(self):
+        """points.MapPoint: Specifies the direction is right."""
+        return directions.RIGHT
 
 
 class MoveCursorLeft(MoveCursor):
     """Moves the cursor one space to the left."""
-    direction = directions.LEFT
 
     def __init__(self, target, content):
         MoveCursor.__init__(self, target, content)
+
+    @property
+    def direction(self):
+        """points.MapPoint: Specifies the direction is left."""
+        return directions.LEFT
 
 
 class MoveCursorUp(MoveCursor):
     """Moves the cursor one space up."""
-    direction = directions.UP
 
     def __init__(self, target, content):
         MoveCursor.__init__(self, target, content)
+
+    @property
+    def direction(self):
+        """points.MapPoint: Specifies the direction is up."""
+        return directions.UP
 
 
 class MoveCursorDown(MoveCursor):
     """Moves the cursor one space down."""
-    direction = directions.DOWN
 
     def __init__(self, target, content):
         MoveCursor.__init__(self, target, content)
+
+    @property
+    def direction(self):
+        """points.MapPoint: Specifies the direction is down."""
+        return directions.DOWN
+
+
+class CursorSelect(commands.Command):
+    """Command to select the top entity under the cursor which belongs the current player."""
+
+    def __init__(self, target, content):
+        commands.Command.__init__(self, target, content)
+
+    def execute(self):
+        """Runs the command."""
+        player = self.content.players.current_player
+        cursor_tile = self.target.location
+        self.content.selection = self.content.map.get_top_friendly_entity(cursor_tile, player)
 
 
 class Cursor(object):
@@ -120,5 +153,7 @@ class Cursor(object):
             return MoveCursorUp
         elif curr_input == user_input.DOWN:
             return MoveCursorDown
+        elif curr_input == user_input.CONFIRM:
+            return CursorSelect
         else:
             return None

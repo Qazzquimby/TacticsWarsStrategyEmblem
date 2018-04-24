@@ -21,6 +21,8 @@
 
 """Top level structures for the main game screen."""
 
+import typing
+
 import pygame
 
 import cursor
@@ -30,6 +32,10 @@ import layers
 import points
 import screens
 import sprites
+
+if typing.TYPE_CHECKING:
+    # pylint: disable=unused-import
+    import players
 
 
 class MainGameScreen(screens.GameScreen):
@@ -78,6 +84,7 @@ class MapAndUI(object):
         self.world_menu = WorldMenu()
         self.map_drawing = MapDrawing(self, display)
 
+        self.players = self.map.world_setup.players  # type: players.PlayerManager
         self.selection = None
 
     def receive_input(self, curr_input):
@@ -98,6 +105,7 @@ class MapAndUI(object):
         command = selection.receive_input(curr_input)
         if command is not None:
             command(selection, self).execute()
+        print(self.selection)
 
 
 class Tile(object):
@@ -106,8 +114,8 @@ class Tile(object):
 
     Attributes:
         self.terrain (entities.Terrain): The tile's terrain entity.
-        self.building (Optional[entites.Building]): The tile's building entity.
-        self.unit (Optional[entites.Unit]): The tile's unit entity.
+        self.building (Optional[entities.Building]): The tile's building entity.
+        self.unit (Optional[entities.Unit]): The tile's unit entity.
     """
 
     def __init__(self, tile_terrain, building, unit):
@@ -131,7 +139,7 @@ class Map(object):
         self.world_setup = world_setup
         self._map = self._init_map(self.world_setup.map_setup.entity_seed_grid)
 
-        self.size_point = points.ScreenPoint.from_tile(self.width, self.height)
+        self.size_point = points.point_from_tile(points.ScreenPoint, self.width, self.height)
         self.surface = graphics.make_surface(self.size_point.pixel)
 
         self.cursor = cursor.Cursor(self)
@@ -150,11 +158,46 @@ class Map(object):
                 return True
         return False
 
-    def get_entity_from_map(self, layer, map_point):
+    def get_top_friendly_entity(self, map_point, player):
+        """Returns the top owned entity on the given tile belonging to the given player.
+
+        Args:
+            map_point(points.MapPoint): The tile to look at.
+            player(players.Player): The player who must own the entity.
+
+        Returns (Optional[entities.OwnedEntity]): The entity found, if any.
+        """
+        tile = self.get_tile(map_point)
+        for entity in [tile.unit, tile.building]:
+            try:
+                if entity.player == player:
+                    return entity
+            except AttributeError:
+                pass
+        return None
+
+    def get_top_entity(self, map_point):
+        """Returns the top owned entity on the given tile.
+
+        Args:
+            map_point(points.MapPoint): The tile to look at.
+
+        Returns (Optional[entities.OwnedEntity]): The entity found, if any.
+        """
+        tile = self.get_tile(map_point)
+        for entity in [tile.unit, tile.building]:
+            if entity.is_null:
+                continue
+            else:
+                return entity
+        # noinspection PyUnreachableCode
+        return None
+
+    def get_entity(self, layer, map_point):
         """Gets the entity from a given layer and map point.
 
         Args:
-            layer (layers.Layer): The entity's layer.
+            layer (Type[layers.Layer]): The entity's layer.
             map_point (points.MapPoint): The entity's coordinates on the map.
 
         Returns:
@@ -306,13 +349,13 @@ class ViewPort(object):
         self.end_point = NotImplemented  # type: points.ScreenPoint
         self._init_end_point()
 
-        self.map_start_point = points.MapPoint.from_tile(0, 0)  # type: points.MapPoint
+        self.map_start_point = points.point_from_tile(points.MapPoint, 0, 0)
 
         self.scroll_boundary = 2
 
     @property
     def range_x(self):
-        """list(int): The range of tile x map oordinates that are visible in the viewport."""
+        """list(int): The range of tile x map coordinates that are visible in the viewport."""
         return range(self.map_start_point.tile_x,
                      self.map_start_point.tile_x + self.size_point.tile_x)
 
@@ -328,7 +371,7 @@ class ViewPort(object):
         return self.map_start_point + self.size_point
 
     def scroll_one_tile(self, direction: directions.Direction):
-        """Moves the map within the viewport, changing which tiles are visisble, based on the
+        """Moves the map within the viewport, changing which tiles are visible, based on the
         given direction.
 
         Args:
@@ -361,10 +404,10 @@ class ViewPort(object):
         size_tile_x = min(self.map.size_point.tile_x, graphics.SCREEN_TILE_WIDTH)
         size_tile_y = min(self.map.size_point.tile_y, graphics.MENU_TILE_HEIGHT)
 
-        self.size_point = points.ScreenPoint.from_tile(size_tile_x, size_tile_y)
+        self.size_point = points.point_from_tile(points.ScreenPoint, size_tile_x, size_tile_y)
 
     def _init_draw_point(self):
-        """Initializees the draw point.
+        """Initializes the draw point.
         The draw point is under the top bar, and visually centered if the map is smaller than the
         viewport.
         """
@@ -377,8 +420,9 @@ class ViewPort(object):
         translated_half_padding_y = half_padding_y + graphics.TOP_BAR_TILE_HEIGHT
         screen_draw_tile_y = max(translated_half_padding_y, 0)
 
-        self.draw_point = points.ScreenPoint.from_tile(screen_draw_tile_x,
-                                                       screen_draw_tile_y)
+        self.draw_point = points.point_from_tile(points.ScreenPoint,
+                                                 screen_draw_tile_x,
+                                                 screen_draw_tile_y)
 
     def _init_end_point(self):
         self.end_point = self.draw_point + self.size_point
@@ -430,12 +474,12 @@ class MapDrawing(object):
     def draw_map_layer(self, layer):
         """Draws a given layer of the map.
         Args:
-            layer (typing.Type[layers.Layer]:
+            layer (Type[layers.Layer]: The class of the layer being drawn.
         """
         for screen_x, map_x in enumerate(self.viewport.range_x):
             for screen_y, map_y in enumerate(self.viewport.range_y):
-                map_point = points.MapPoint.from_tile(map_x, map_y)
-                screen_point = points.ScreenPoint.from_tile(screen_x, screen_y)
+                map_point = points.point_from_tile(points.MapPoint, map_x, map_y)
+                screen_point = points.point_from_tile(points.ScreenPoint, screen_x, screen_y)
                 self.draw_tile_layer(layer, map_point, screen_point)
 
     def draw_tile_layer(self, layer, map_point, screen_point):
@@ -445,7 +489,7 @@ class MapDrawing(object):
             map_point (points.MapPoint): The coordinates of the space to draw.w
             screen_point (points.ScreenPoint): The point on the screen to draw the tile.
         """
-        entity = self.map.get_entity_from_map(layer, map_point)
+        entity = self.map.get_entity(layer, map_point)
         self.draw_entity_if_not_null_entity(entity, screen_point)
 
     def draw_entity_if_not_null_entity(self, entity, screen_point):
@@ -460,8 +504,7 @@ class MapDrawing(object):
         except sprites.DrawNullEntityException:
             pass
 
-    def _draw_entity_if_sprite_found(self, entity: "entities.Entity",
-                                     screen_point: points.ScreenPoint):
+    def _draw_entity_if_sprite_found(self, entity, screen_point):
         sprite = entity.sprite
         if sprite:
             self._draw_entity_sprite(sprite, screen_point)
@@ -484,7 +527,7 @@ class MapDrawing(object):
         """Draws the in game menu at the bottom of the screen."""
         sprite = self.world_menu.surface
         menu_top_tile = graphics.TOP_BAR_TILE_HEIGHT + graphics.MAP_TILE_HEIGHT
-        screen_point = points.ScreenPoint.from_tile(0, menu_top_tile)
+        screen_point = points.point_from_tile(points.ScreenPoint, 0, menu_top_tile)
         self.display.blit(sprite, screen_point.pixel)
 
     def _init_map_larger_than_screen(self) -> bool:
@@ -511,7 +554,7 @@ class MapDrawing(object):
             centered_x = int((graphics.MAP_TILE_WIDTH - self.map.width) / 2)
             centered_y = int((graphics.MAP_TILE_HEIGHT - self.map.height) / 2 +
                              graphics.TOP_BAR_TILE_HEIGHT)
-            return points.ScreenPoint.from_tile(centered_x, centered_y)
+            return points.point_from_tile(points.ScreenPoint, centered_x, centered_y)
 
     def scroll_to_cursor(self):
         """Scrolls the map towards the cursor until the cursor is inside the scroll boundary."""

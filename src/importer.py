@@ -58,7 +58,7 @@ class Importer(ImporterShell):
 
     Attributes:
         self.manager (NoInstanciationPluginManager): Handles the actual importing.
-        self.loocations (List[str]): A list of relative file paths to search for plugins.
+        self.locations (List[str]): A list of relative file paths to search for plugins.
         self.plugin_class (Type[IPlugin]): The IPlugin type of class to search for. Plugin
             classes must be specifically defined and passed in.
         self.plugins (List[yapsy.PluginInfo]): The plugins found.

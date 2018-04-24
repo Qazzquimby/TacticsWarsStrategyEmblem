@@ -22,6 +22,11 @@
 """This holds the command object"""
 
 import abc
+import typing
+
+if typing.TYPE_CHECKING:
+    # pylint: disable=unused-import
+    import world_screen
 
 
 class Command(abc.ABC):
@@ -31,13 +36,13 @@ class Command(abc.ABC):
         self.target (any): The object to perform the function on.
         self.content (world_screen.MapAndUI): The world the action is being executed on,
         for context.
-
     """
 
     def __init__(self, target, content):
         self.target = target
-        self.content = content
+        self.content = content  # type: world_screen.MapAndUI
 
+    @abc.abstractmethod
     def execute(self):
         """Performs the command's function."""
-        raise NotImplementedError
+        return

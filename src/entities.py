@@ -22,14 +22,19 @@
 """Classes related to entities."""
 
 import abc
+import typing
 
 from yapsy.IPlugin import IPlugin
 
 import colors
 import players
 import sprites
-from classproperty import classproperty
 from importer import Importer  # pylint: disable=no-name-in-module
+
+if typing.TYPE_CHECKING:
+    # pylint: disable=unused-import
+    import armies
+
 
 
 class Entity(abc.ABC):
@@ -43,29 +48,29 @@ class Entity(abc.ABC):
         self.animation_speed (Optional[int]): The length of each frame in the animation, or none for
         default.
     """
-    _name = NotImplemented  # type: str
-    _code_name = NotImplemented  # type: str
-    _sprite_location = ""  # type: str
     _initialized = False
     animation_speed = None
 
     def __init__(self):
         self._initialize_class_if_uninitialized()
 
-    @classproperty
+    @property
+    @abc.abstractmethod
     def name(self):
         """str: The front end name."""
-        return self._name
-
-    @classproperty
-    def code_name(self):
-        """str: The internal name."""
-        return self._code_name
+        return
 
     @property
+    @abc.abstractmethod
+    def code_name(self):
+        """str: The internal name."""
+        return
+
+    @property
+    @abc.abstractmethod
     def animation(self):
         """sprites.SpriteAnimation: The entity's animation on the map."""
-        raise NotImplementedError
+        return
 
     @property
     def sprite(self):
@@ -73,30 +78,48 @@ class Entity(abc.ABC):
         return self.animation.sprite
 
     @property
+    @abc.abstractmethod
     def sprite_location(self):
         """str: The relative path to the animation sheet."""
-        return self._sprite_location
+        return
+
+    @property
+    def is_null(self):
+        """Returns that this is not a null entity.
+        Overwritten by null_entity."""
+        return False
 
     def _initialize_class_if_uninitialized(self):
         if not self._initialized:
             self._initialize_class()
             self._initialized = True
 
+    @abc.abstractmethod
     def _initialize_class(self):
-        raise NotImplementedError
+        return
+
+    def __str__(self):
+        return self.code_name
 
 
+# noinspection PyAbstractClass
 class UnownedEntity(Entity, abc.ABC):
     """An entity that doesn't belong to a player."""
-    _animation = NotImplemented  # type: sprites.SpriteAnimation
+    _sprite_location = NotImplemented
+    _animation = NotImplemented
 
     def __init__(self):
         Entity.__init__(self)
 
     @property
-    def animation(self) -> sprites.SpriteAnimation:
+    def animation(self):
         """sprites.SpriteAnimation: The entity's animation on the screen."""
         return self._animation
+
+    @property
+    def sprite_location(self):
+        """str: Relative path the the entity's sprite animation."""
+        return self._sprite_location
 
     def _initialize_class(self):
         self._animation = sprites.SpriteAnimation(self.sprite_location,
@@ -104,10 +127,10 @@ class UnownedEntity(Entity, abc.ABC):
                                                   self.animation_speed)
 
 
+# noinspection PyAbstractClass
 class OwnedEntity(Entity, abc.ABC):
     """An entity that belongs to a player."""
-    _army = NotImplemented  # type: armies.Army
-    _sprite_location_type = NotImplemented  # type: str
+    _army = NotImplemented  # type: typing.Type[armies.Army]
     _sprite_location = NotImplemented  # type: str
     _animation_red = NotImplemented  # type: sprites.SpriteAnimation
     _animation_blue = NotImplemented  # type: sprites.SpriteAnimation
@@ -129,8 +152,17 @@ class OwnedEntity(Entity, abc.ABC):
 
     @property
     def army(self):
-        """armies.Army: The army this belongs to."""
+        """Type[armies.Army]: The army this belongs to."""
         return self._army
+
+    @property
+    def sprite_location(self):
+        """str: Relative path to this entity's sprite animation."""
+        return self._sprite_location
+
+    @property
+    def _sprite_location_type(self) -> str:
+        return self._sprite_location
 
     def _initialize_class(self):
         self._army = self.army
@@ -151,14 +183,19 @@ class OwnedEntity(Entity, abc.ABC):
         self._army().add_entity(self.__class__)
 
 
-class Building(OwnedEntity):
+# noinspection PyAbstractClass
+class Building(OwnedEntity, abc.ABC):
     """A building entity."""
-    _sprite_location_type = "/buildings/"
 
     def __init__(self, player: players.Player):
         OwnedEntity.__init__(self, player)
 
+    @property
+    def _sprite_location_type(self):
+        return "/buildings/"
 
+
+# noinspection PyAbstractClass
 class Unit(OwnedEntity):
     """A unit entity."""
     _sprite_location_type = "/units/"
@@ -169,16 +206,34 @@ class Unit(OwnedEntity):
 
 class NullEntity(Entity):
     """A non-existent filler entity."""
-    _name = "NULL ENTITY"
-    _code_name = "null_entity"
 
     def __init__(self):
         Entity.__init__(self)
 
     @property
+    def name(self):
+        """str: Outwards facing name."""
+        return "NULL ENTITY"
+
+    @property
+    def code_name(self):
+        """str: Debug name."""
+        return "null_entity"
+
+    @property
     def animation(self):
         """Raises an exception. NullEntities should not be drawn."""
         raise sprites.DrawNullEntityException()
+
+    @property
+    def sprite_location(self):
+        """str: Filler function. Trying to draw the null entity results in an exception."""
+        return ""
+
+    @property
+    def is_null(self):
+        """bool: Returns that this is a null entity"""
+        return True
 
     def _initialize_class(self):
         pass
@@ -187,10 +242,15 @@ class NullEntity(Entity):
 class Terrain(UnownedEntity):
     """A terrain entity."""
     _sprite_location = "assets/terrain/"
-    _defense = NotImplemented  # type: int
 
     def __init__(self):
         UnownedEntity.__init__(self)
+
+    @property
+    @abc.abstractmethod
+    def defense(self) -> int:
+        """int: (Abstract) The defense transferred to a unit standing on this terrain."""
+        pass
 
 
 class EntityPlugin(IPlugin):
@@ -207,13 +267,25 @@ class EntityImporter(Importer):
 
 class Grass(Terrain):
     """Grass terrain type."""
-    _name = "Grass"
-    _code_name = "grass"
-    _defense = 1
     _initialized = False
 
     def __init__(self):
         Terrain.__init__(self)
+
+    @property
+    def name(self):
+        """str: Outwards facing name."""
+        return "Grass"
+
+    @property
+    def code_name(self):
+        """str: Inwards debug name."""
+        return "grass"
+
+    @property
+    def defense(self):
+        """int: Defense score added to units on this terrain."""
+        return 1
 
 
 TERRAIN_LIST = [Grass]

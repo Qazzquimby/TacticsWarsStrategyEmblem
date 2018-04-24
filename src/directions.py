@@ -41,13 +41,13 @@ class Direction(abc.ABC):
         self.opposite = NotImplemented  # Must be set after creation :(
 
 
-LEFT = Direction(points.Point.from_tile(-1, 0))
-RIGHT = Direction(points.Point.from_tile(1, 0))
+LEFT = Direction(points.point_from_tile(points.MapPoint, -1, 0))
+RIGHT = Direction(points.point_from_tile(points.MapPoint, 1, 0))
 LEFT.opposite = RIGHT
 RIGHT.opposite = LEFT
 
-UP = Direction(points.Point.from_tile(0, -1))
-DOWN = Direction(points.Point.from_tile(0, 1))
+UP = Direction(points.point_from_tile(points.MapPoint, 0, -1))
+DOWN = Direction(points.point_from_tile(points.MapPoint, 0, 1))
 UP.opposite = DOWN
 DOWN.opposite = UP
 

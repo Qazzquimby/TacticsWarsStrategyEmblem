@@ -268,7 +268,7 @@ class ControlMap(object):
     """Contains the mapping of key presses to Inputs."""
 
     def __init__(self):
-        """_input_dict maps ("keyname", isKeyUp) to an Input"""
+        """_input_dict maps ("key_name", isKeyUp) to an Input"""
 
         self._input_dict = {
             ("x", KEY_DOWN): CONFIRM,

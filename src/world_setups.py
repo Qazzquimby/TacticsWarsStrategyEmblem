@@ -104,7 +104,7 @@ class MapSetup(object):
         return entity_seed_grid
 
     def _create_column(self, column_xml):
-        """ Builds a single column fopr the entity seed grid.
+        """ Builds a single column for the entity seed grid.
 
         Args:
             column_xml: The relevant column from the map's xml tree.
@@ -127,7 +127,7 @@ class MapSetup(object):
         """Generates the entity seed based on an entity referenced in the map's xml.
 
         Args:
-            layer (typing.Type[layers.Layer]): The layer the entity is on.
+            layer (Type[layers.Layer]): The layer the entity is on.
             tile_xml (ElementTree.Element): The entity's xml.
 
         Returns:
@@ -211,8 +211,8 @@ class WorldSetup(object):
 
     @property
     def players(self):
-        """list(players.Player): A list of all players in the map."""
-        return self.map_setup.players.player_list
+        """players.PlayerManager: Holds the players in the game and helpers."""
+        return self.map_setup.players
 
     def _initialize_entity_dict(self):
         """Makes a nested dictionary mapping descriptions to their entity class.
@@ -256,21 +256,20 @@ class WorldSetup(object):
         """
         entity_dict[layers.BuildingLayer.name][army.code_name] = {}
         for building in army.buildings:
-            entity_dict[layers.BuildingLayer.name][army.code_name][building.code_name] = \
-                building
+            entity_dict[layers.BuildingLayer.name][army.code_name][building.code_name] = building
 
         entity_dict[layers.UnitLayer.name][army.code_name] = {}
         for unit in army.units:
             entity_dict[layers.UnitLayer.name][army.code_name][unit.code_name] = unit
 
     def entity_from_seed(self, entity_seed):
-        """Gets the entity class from the entity dict, and instanciates it.
+        """Gets the entity class from the entity dict, and instantiates it.
 
         Args:
             entity_seed (EntitySeed): The seed used to fetch the entity.
 
         Returns:
-            entities.Entity: The instanciated entity.
+            entities.Entity: The instantiated entity.
 
         """
         entity_class = self.access_entity_dict(entity_seed.layer,
@@ -279,7 +278,7 @@ class WorldSetup(object):
         if entity_seed.player == -1:
             entity_instance = entity_class()
         else:
-            entity_instance = entity_class(self.players[entity_seed.player])
+            entity_instance = entity_class(self.players.player_list[entity_seed.player])
         return entity_instance
 
     def access_entity_dict(self, layer: typing.Type[layers.Layer], army, entity):
@@ -296,4 +295,5 @@ class WorldSetup(object):
         try:
             return self.entity_dict[layer.name][army][entity]
         except KeyError:
-            raise KeyError(entity + " not defined. Were they initialized in the army module?")
+            raise KeyError(
+                "{} not defined. Were they initialized in the army module?".format(entity))

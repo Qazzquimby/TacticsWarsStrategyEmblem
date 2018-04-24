@@ -51,10 +51,10 @@ Attributes:
     MAP_TILE_WIDTH (int): Width of map in tiles.
     MAP_WIDTH (int): Width of map in pixels.
 
-    RED (tuple(int)): The rgb colorcode represenging red.
-    WHITE (tuple(int)): The rgb colorcode represenging white.
-    BLACK (tuple(int)): The rgb colorcode represenging black.
-    TRANSPARENT (tuple(int)): The rgb colorcode represenging transparency.
+    RED (tuple(int)): The rgb color code representing red.
+    WHITE (tuple(int)): The rgb color code representing white.
+    BLACK (tuple(int)): The rgb color code representing black.
+    TRANSPARENT (tuple(int)): The rgb color code representing transparency.
 
     DEFAULT_ANIMATION_FRAME_LENGTH (int): The length a frame should be shown in milliseconds before
     advancing in the animation, unless overwritten in the animation.
@@ -68,24 +68,28 @@ TILE_SIZE = 32
 
 SCREEN_TILE_WIDTH = 30
 SCREEN_TILE_HEIGHT = 20
-SCREEN_SIZE_POINT = points.ScreenPoint.from_tile(SCREEN_TILE_WIDTH, SCREEN_TILE_HEIGHT)
+SCREEN_SIZE_POINT = points.point_from_tile(points.ScreenPoint, SCREEN_TILE_WIDTH,
+                                           SCREEN_TILE_HEIGHT)
 
 SCREEN_WIDTH = SCREEN_SIZE_POINT.pixel_x
 SCREEN_HEIGHT = SCREEN_SIZE_POINT.pixel_y
 
 TOP_BAR_DRAW_POINT = points.ScreenPoint(0, 0)
 TOP_BAR_TILE_HEIGHT = 2
-TOP_BAR_TILE_SIZE_POINT = points.ScreenPoint.from_tile(SCREEN_TILE_WIDTH, TOP_BAR_TILE_HEIGHT)
+TOP_BAR_TILE_SIZE_POINT = points.point_from_tile(points.ScreenPoint, SCREEN_TILE_WIDTH,
+                                                 TOP_BAR_TILE_HEIGHT)
 TOP_BAR_HEIGHT = TOP_BAR_TILE_SIZE_POINT.pixel_y
 
 MENU_TILE_HEIGHT = 5
-MENU_DRAW_POINT = points.ScreenPoint.from_tile(0, SCREEN_TILE_HEIGHT - MENU_TILE_HEIGHT)
-MENU_SIZE_POINT = points.ScreenPoint.from_tile(SCREEN_TILE_WIDTH, MENU_TILE_HEIGHT)
+MENU_DRAW_POINT = points.point_from_tile(points.ScreenPoint,
+                                         0,
+                                         SCREEN_TILE_HEIGHT - MENU_TILE_HEIGHT)
+MENU_SIZE_POINT = points.point_from_tile(points.ScreenPoint, SCREEN_TILE_WIDTH, MENU_TILE_HEIGHT)
 MENU_HEIGHT = MENU_SIZE_POINT.pixel_y
 
 MAP_TILE_HEIGHT = SCREEN_TILE_HEIGHT - TOP_BAR_TILE_HEIGHT - MENU_TILE_HEIGHT
-MAP_DRAW_POINT = points.ScreenPoint.from_tile(0, TOP_BAR_TILE_HEIGHT)
-MAP_SIZE_POINT = points.ScreenPoint.from_tile(SCREEN_TILE_WIDTH, MAP_TILE_HEIGHT)
+MAP_DRAW_POINT = points.point_from_tile(points.ScreenPoint, 0, TOP_BAR_TILE_HEIGHT)
+MAP_SIZE_POINT = points.point_from_tile(points.ScreenPoint, SCREEN_TILE_WIDTH, MAP_TILE_HEIGHT)
 MAP_HEIGHT = MAP_SIZE_POINT.pixel_y
 
 MAP_TILE_WIDTH = MAP_SIZE_POINT.tile_x
@@ -155,6 +159,7 @@ class Display(object):
         self._surface.blit(surface, destination)
 
 
+# noinspection PyArgumentList
 def make_surface(dimensions):
     """Makes a new surface
 

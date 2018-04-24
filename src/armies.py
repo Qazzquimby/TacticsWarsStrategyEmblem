@@ -34,23 +34,21 @@ from importer import Importer  # pylint:disable=no-name-in-module
 
 class Army(abc.ABC):
     """Base class for armies."""
-    _name = NotImplemented  # type: str
-    _code_name = NotImplemented  # type: str
     _buildings = []  # type: typing.List["entities.Building"]
     _units = []  # type: typing.List["entities.Unit"]
 
     def __init__(self):
         pass
 
-    @property
+    @abc.abstractmethod
     def name(self):
         """str: The army's outwards facing name."""
-        return self._name
+        return
 
-    @property
+    @abc.abstractmethod
     def code_name(self):
         """str: The army's internal name."""
-        return self._code_name
+        return
 
     @property
     def buildings(self):

@@ -40,19 +40,6 @@ class Point(abc.ABC):
         self._x = x
         self._y = y
 
-    @classmethod
-    def from_tile(cls, x, y):
-        """Generates a Point from given tile coordinates.
-
-        Args:
-            x (int): The x coordinate in tiles.
-            y (int): The y coordinate in tiles.
-
-        Returns:
-            Point: The generated point.
-        """
-        return cls(graphics.TILE_SIZE * x, graphics.TILE_SIZE * y)
-
     @property
     def tile(self):
         """tuple(int, int): The x, y coordinates in tiles."""
@@ -101,16 +88,20 @@ class Point(abc.ABC):
         Returns:
             Point: The generated point.
         """
-        starting_point = Point(self.pixel_x, self.pixel_y)
+        starting_point = MapPoint(self.pixel_x, self.pixel_y)
         return starting_point + direction.point
+
+    @abc.abstractmethod
+    def __str__(self):
+        return
 
     def __add__(self, other):
         """Adds other point's x and y value to own x and y value."""
-        return Point(self.pixel_x + other.pixel_x, self.pixel_y + other.pixel_y)
+        return self.__class__(self.pixel_x + other.pixel_x, self.pixel_y + other.pixel_y)
 
     def __sub__(self, other):
         """Subtracts other point's x and y value from own x and y value."""
-        return Point(self.pixel_x - other.pixel_x, self.pixel_y - other.pixel_y)
+        return self.__class__(self.pixel_x - other.pixel_x, self.pixel_y - other.pixel_y)
 
 
 class ScreenPoint(Point):
@@ -119,10 +110,8 @@ class ScreenPoint(Point):
     def __init__(self, x, y):
         Point.__init__(self, x, y)
 
-    @classmethod
-    def from_tile(cls, x, y):
-        """See Point.from_tile"""
-        return Point.from_tile(x, y)
+    def __str__(self):
+        return "{}, {}".format(self.pixel_x, self.pixel_y)
 
 
 class MapPoint(Point):
@@ -131,7 +120,19 @@ class MapPoint(Point):
     def __init__(self, x, y):
         Point.__init__(self, x, y)
 
-    @classmethod
-    def from_tile(cls, x, y):
-        """See Point.from_tile"""
-        return Point.from_tile(x, y)
+    def __str__(self):
+        return "{}, {}".format(self.tile_x, self.tile_y)
+
+
+def point_from_tile(cls, x, y):
+    """Generates a Point from given tile coordinates.
+
+    Args:
+        cls (Type[Point]): The point class to create.
+        x (int): The x coordinate in tiles.
+        y (int): The y coordinate in tiles.
+
+    Returns:
+        cls: The generated point.
+    """
+    return cls(graphics.TILE_SIZE * x, graphics.TILE_SIZE * y)

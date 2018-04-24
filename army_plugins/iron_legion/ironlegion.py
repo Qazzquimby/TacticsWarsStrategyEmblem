@@ -1,37 +1,58 @@
 import armies
 import entities
-
+from classproperty import classproperty
 
 class IronLegion(armies.Army, armies.ArmyPlugin):
-    _name = "Iron Legion"
-    _code_name = "iron_legion"
-    _buildings = []
-    _units = []
-
     def __init__(self):
         armies.Army.__init__(self)
 
+    @property
+    def name(self):
+        """str: The army's outwards facing name."""
+        return "Iron Legion"
+
+    @property
+    def code_name(self):
+        """str: The army's internal name."""
+        return "iron_legion"
+
 
 class HQ(entities.Building):
-    _name = "HQ"
-    _code_name = "hq"
-    _army = IronLegion
-
     def __init__(self, player):
         entities.Building.__init__(self, player)
 
+    @classproperty
+    def name(self):
+        return "HQ"
+
+    @classproperty
+    def code_name(self):
+        return "hq"
+
+    @classproperty
+    def army(self):
+        return IronLegion
 
 HQ(None)
 
 
 class Marine(entities.Unit):
-    _name = "Marine"
-    _code_name = "marine"
-    _army = IronLegion
     animation_speed = 5
 
     def __init__(self, player):
         entities.Unit.__init__(self, player)
+
+    @classproperty
+    def name(self):
+        return "Marine"
+
+    @classproperty
+    def code_name(self):
+        return "marine"
+
+    @classproperty
+    def army(self):
+        return IronLegion
 
 
 Marine(None)
